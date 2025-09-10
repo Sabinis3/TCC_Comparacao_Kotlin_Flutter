@@ -21,6 +21,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.example.tcc_kotlin.screens.BiometriaScreen
 import com.example.tcc_kotlin.ui.theme.TCC_KotlinTheme
 
 class MainActivity : ComponentActivity() {
@@ -28,50 +32,57 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+            val navController = rememberNavController()
             TCC_KotlinTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    Column (
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .statusBarsPadding()
-                            .padding(16.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ){
-                        Row(
-                            modifier = Modifier
-                                .fillMaxSize(),
-                            horizontalArrangement = Arrangement.SpaceEvenly,
-                            verticalAlignment = Alignment.CenterVertically
+                NavHost(navController, startDestination = "main") {
+                    composable("main") {
+                        Surface(
+                            modifier = Modifier.fillMaxSize(),
+                            color = MaterialTheme.colorScheme.background
                         ) {
-                            OutlinedButton (
-                                onClick = { /*TODO*/ },
+                            Column (
                                 modifier = Modifier
-                                    .width(150.dp),
-                                shape = RoundedCornerShape(4.dp)
-                            ) {
-                                Text(
-                                    text = "Autenticação",
-                                    fontSize = 12.sp,
-                                    textAlign = TextAlign.Center
-                                )
-                            };
-                            OutlinedButton (
-                                onClick = { /*TODO*/ },
-                                modifier = Modifier
-                                    .width(150.dp),
-                                shape = RoundedCornerShape(4.dp)
-                            ) {
-                                Text(
-                                    text = "Camera",
-                                    fontSize = 12.sp,
-                                    textAlign = TextAlign.Center)
+                                    .fillMaxSize()
+                                    .statusBarsPadding()
+                                    .padding(16.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ){
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxSize(),
+                                    horizontalArrangement = Arrangement.SpaceEvenly,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    OutlinedButton (
+                                        onClick = { navController.navigate("biometria") },
+                                        modifier = Modifier
+                                            .width(150.dp),
+                                        shape = RoundedCornerShape(4.dp)
+                                    ) {
+                                        Text(
+                                            text = "Autenticação",
+                                            fontSize = 12.sp,
+                                            textAlign = TextAlign.Center
+                                        )
+                                    };
+                                    OutlinedButton (
+                                        onClick = { /*TODO*/ },
+                                        modifier = Modifier
+                                            .width(150.dp),
+                                        shape = RoundedCornerShape(4.dp)
+                                    ) {
+                                        Text(
+                                            text = "Camera",
+                                            fontSize = 12.sp,
+                                            textAlign = TextAlign.Center)
+                                    }
+                                }
                             }
                         }
                     }
+                    composable("biometria") { BiometriaScreen() }
                 }
+
             }
         }
     }
