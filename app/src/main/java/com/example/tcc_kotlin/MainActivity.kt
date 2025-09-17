@@ -1,7 +1,6 @@
 package com.example.tcc_kotlin
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Arrangement
@@ -21,13 +20,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.fragment.app.FragmentActivity
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.tcc_kotlin.screens.BiometriaScreen
+import com.example.tcc_kotlin.screens.biometria.BiometriaScreen
+import com.example.tcc_kotlin.screens.camera.CameraScreen
 import com.example.tcc_kotlin.ui.theme.TCC_KotlinTheme
 
-class MainActivity : ComponentActivity() {
+class MainActivity : FragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -60,19 +61,19 @@ class MainActivity : ComponentActivity() {
                                         shape = RoundedCornerShape(4.dp)
                                     ) {
                                         Text(
-                                            text = "Autenticação",
+                                            text = "Biometria",
                                             fontSize = 12.sp,
                                             textAlign = TextAlign.Center
                                         )
                                     };
                                     OutlinedButton (
-                                        onClick = { /*TODO*/ },
+                                        onClick = { navController.navigate("camera") },
                                         modifier = Modifier
                                             .width(150.dp),
                                         shape = RoundedCornerShape(4.dp)
                                     ) {
                                         Text(
-                                            text = "Camera",
+                                            text = "Camêra",
                                             fontSize = 12.sp,
                                             textAlign = TextAlign.Center)
                                     }
@@ -80,7 +81,8 @@ class MainActivity : ComponentActivity() {
                             }
                         }
                     }
-                    composable("biometria") { BiometriaScreen() }
+                    composable("biometria") { BiometriaScreen(navController) }
+                    composable("camera") { CameraScreen(navController) }
                 }
 
             }
