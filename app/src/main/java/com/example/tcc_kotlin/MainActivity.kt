@@ -22,6 +22,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.tcc_kotlin.screens.biometria.BiometriaScreen
 import com.example.tcc_kotlin.screens.camera.CameraScreen
+import com.example.tcc_kotlin.screens.feedbackTatil.FeedbackTatilScreen
 import com.example.tcc_kotlin.ui.theme.TCC_KotlinTheme
 
 class MainActivity : FragmentActivity() {
@@ -36,11 +37,13 @@ class MainActivity : FragmentActivity() {
                     composable("main") {
                         MainScreen(
                             onBiometriaClick = { navController.navigate("biometria") },
-                            onCameraClick = { handleCameraClick(navController) }
+                            onCameraClick = { handleCameraClick(navController) },
+                            onFeedbackTatilClick = { navController.navigate("feedbackTatil") }
                         )
                     }
                     composable("biometria") { BiometriaScreen(navController) }
                     composable("camera") { CameraScreen(navController) }
+                    composable("feedbackTatil") { FeedbackTatilScreen(navController) }
                 }
             }
         }
@@ -75,7 +78,8 @@ class MainActivity : FragmentActivity() {
 @Composable
 private fun MainScreen(
     onBiometriaClick: () -> Unit,
-    onCameraClick: () -> Unit
+    onCameraClick: () -> Unit,
+    onFeedbackTatilClick: () -> Unit
 ) {
     Surface(
         modifier = Modifier
@@ -88,16 +92,12 @@ private fun MainScreen(
                 .fillMaxSize()
                 .statusBarsPadding()
                 .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
-            Row(
-                modifier = Modifier.fillMaxSize(),
-                horizontalArrangement = Arrangement.SpaceEvenly,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                ActionButton("Biometria", onBiometriaClick)
-                ActionButton("Câmera", onCameraClick)
-            }
+            ActionButton("Biometria", onBiometriaClick)
+            ActionButton("Câmera", onCameraClick)
+            ActionButton("Vibração", onFeedbackTatilClick)
         }
     }
 }
@@ -106,7 +106,7 @@ private fun MainScreen(
 private fun ActionButton(text: String, onClick: () -> Unit) {
     OutlinedButton(
         onClick = onClick,
-        modifier = Modifier.width(150.dp),
+        modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
         shape = RoundedCornerShape(4.dp)
     ) {
         Text(
