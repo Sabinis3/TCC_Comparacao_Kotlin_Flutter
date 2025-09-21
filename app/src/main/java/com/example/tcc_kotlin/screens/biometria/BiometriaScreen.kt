@@ -62,7 +62,7 @@ fun BiometriaScreen(navController: NavController) {
                             shape = RoundedCornerShape(4.dp)
                         ) {
                             Text(
-                                text = "Cadastrar Biometria",
+                                text = "Validar Biometria",
                                 fontSize = 12.sp,
                                 textAlign = TextAlign.Center
                             )
