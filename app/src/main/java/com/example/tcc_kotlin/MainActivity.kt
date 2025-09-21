@@ -5,26 +5,12 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawing
-import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.SideEffect
+import androidx.compose.material3.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -44,95 +30,89 @@ class MainActivity : FragmentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            val navController = rememberNavController()
             TCC_KotlinTheme {
-                SideEffect {
-                    window.navigationBarColor = androidx.compose.ui.graphics.Color.Black.toArgb()
-                    androidx.core.view.WindowInsetsControllerCompat(
-                        window,
-                        window.decorView
-                    ).isAppearanceLightNavigationBars = false
-                }
-
+                val navController = rememberNavController()
                 NavHost(navController, startDestination = "main") {
                     composable("main") {
-                        Surface(
-                            modifier = Modifier
-                                        .fillMaxSize()
-                                        .windowInsetsPadding(WindowInsets.safeDrawing),
-                            color = MaterialTheme.colorScheme.background
-                        ) {
-                            Column (
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .statusBarsPadding()
-                                    .padding(16.dp),
-                                horizontalAlignment = Alignment.CenterHorizontally
-                            ){
-                                Row(
-                                    modifier = Modifier
-                                        .fillMaxSize(),
-                                    horizontalArrangement = Arrangement.SpaceEvenly,
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    OutlinedButton (
-                                        onClick = { navController.navigate("biometria") },
-                                        modifier = Modifier
-                                            .width(150.dp),
-                                        shape = RoundedCornerShape(4.dp)
-                                    ) {
-                                        Text(
-                                            text = "Biometria",
-                                            fontSize = 12.sp,
-                                            textAlign = TextAlign.Center
-                                        )
-                                    }
-                                    OutlinedButton (
-                                        onClick = {
-                                            if (hasRequiredPermissions()) {
-                                                navController.navigate("camera")
-                                            } else {
-                                                ActivityCompat.requestPermissions(
-                                                    this@MainActivity,
-                                                    CAMERAX_PERNISSIONS,
-                                                    0
-                                                )
-                                            }
-                                        },
-                                        modifier = Modifier
-                                            .width(150.dp),
-                                        shape = RoundedCornerShape(4.dp)
-                                    ) {
-                                        Text(
-                                            text = "Câmera",
-                                            fontSize = 12.sp,
-                                            textAlign = TextAlign.Center)
-                                    }
-                                }
-                            }
-                        }
+                        MainScreen(
+                            onBiometriaClick = { navController.navigate("biometria") },
+                            onCameraClick = { handleCameraClick(navController) }
+                        )
                     }
                     composable("biometria") { BiometriaScreen(navController) }
                     composable("camera") { CameraScreen(navController) }
                 }
-
             }
         }
     }
 
+    private fun handleCameraClick(navController: androidx.navigation.NavController) {
+        if (hasRequiredPermissions()) {
+            navController.navigate("camera")
+        } else {
+            ActivityCompat.requestPermissions(
+                this,
+                CAMERAX_PERMISSIONS,
+                0
+            )
+        }
+    }
+
     private fun hasRequiredPermissions(): Boolean {
-        return CAMERAX_PERNISSIONS.all {
-            ContextCompat.checkSelfPermission(
-                applicationContext,
-                it
-            ) == PackageManager.PERMISSION_GRANTED
+        return CAMERAX_PERMISSIONS.all {
+            ContextCompat.checkSelfPermission(applicationContext, it) == PackageManager.PERMISSION_GRANTED
         }
     }
 
     companion object {
-        private val CAMERAX_PERNISSIONS = arrayOf(
+        private val CAMERAX_PERMISSIONS = arrayOf(
             Manifest.permission.CAMERA,
             Manifest.permission.RECORD_AUDIO
+        )
+    }
+}
+
+@Composable
+private fun MainScreen(
+    onBiometriaClick: () -> Unit,
+    onCameraClick: () -> Unit
+) {
+    Surface(
+        modifier = Modifier
+            .fillMaxSize()
+            .windowInsetsPadding(WindowInsets.safeDrawing),
+        color = MaterialTheme.colorScheme.background
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .statusBarsPadding()
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Row(
+                modifier = Modifier.fillMaxSize(),
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                ActionButton("Biometria", onBiometriaClick)
+                ActionButton("Câmera", onCameraClick)
+            }
+        }
+    }
+}
+
+@Composable
+private fun ActionButton(text: String, onClick: () -> Unit) {
+    OutlinedButton(
+        onClick = onClick,
+        modifier = Modifier.width(150.dp),
+        shape = RoundedCornerShape(4.dp)
+    ) {
+        Text(
+            text = text,
+            fontSize = 12.sp,
+            textAlign = TextAlign.Center
         )
     }
 }
