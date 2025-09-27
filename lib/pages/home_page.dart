@@ -15,52 +15,80 @@ class HomePage extends StatelessWidget {
         title: Text("Home TCC"),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            spacing: 8.0,
-            children: <Widget>[
-              SizedBox(
-                width: double.infinity,
-                child: FilledButton.icon(
-                  icon: Icon(Icons.camera_alt),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => CameraPage()),
-                    );
-                  },
-                  style: FilledButton.styleFrom(
-                    padding: EdgeInsets.all(12.0),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                  ),
-                  label: Text("Câmera", style: TextStyle(fontSize: 16.0)),
+        padding: const EdgeInsets.all(16.0),
+        child: GridView.count(
+          shrinkWrap: true,
+          crossAxisCount: 2,
+          mainAxisSpacing: 16.0,
+          crossAxisSpacing: 16.0,
+          childAspectRatio: 2.5,
+          children: <Widget>[
+            FilledButton.icon(
+              icon: Icon(Icons.fingerprint_rounded, size: 28.0),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => BiometricPage()),
+                );
+              },
+              style: FilledButton.styleFrom(
+                padding: EdgeInsets.all(12.0),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
                 ),
               ),
-              SizedBox(
-                width: double.infinity,
-                child: FilledButton.icon(
-                  icon: Icon(Icons.fingerprint),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => BiometricPage()),
-                    );
-                  },
-                  style: FilledButton.styleFrom(
-                    padding: EdgeInsets.all(12.0),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                  ),
-                  label: Text("Biometria", style: TextStyle(fontSize: 16.0)),
+              label: Text("Biometria", style: TextStyle(fontSize: 16.0)),
+            ),
+            FilledButton.icon(
+              icon: Icon(Icons.camera_alt_rounded, size: 28.0),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => CameraPage()),
+                );
+              },
+              style: FilledButton.styleFrom(
+                padding: EdgeInsets.all(12.0),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
                 ),
               ),
-            ],
-          ),
+              label: Text("Câmera", style: TextStyle(fontSize: 16.0)),
+            ),
+
+            FilledButton.icon(
+              icon: Icon(Icons.vibration_rounded, size: 28.0),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => BiometricPage()),
+                );
+              },
+              style: FilledButton.styleFrom(
+                padding: EdgeInsets.all(12.0),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+              ),
+              label: Text("Vibração", style: TextStyle(fontSize: 16.0)),
+            ),
+            FilledButton.icon(
+              icon: Icon(Icons.flash_on_rounded, size: 28.0),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => BiometricPage()),
+                );
+              },
+              style: FilledButton.styleFrom(
+                padding: EdgeInsets.all(12.0),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+              ),
+              label: Text("Flash", style: TextStyle(fontSize: 16.0)),
+            ),
+          ],
         ),
       ),
     );

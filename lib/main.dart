@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
       title: 'Flutter TCC',
       theme: ThemeData(
         useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 100, 33, 243)),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
       ),
       home: HomePage(),
     );

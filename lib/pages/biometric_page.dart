@@ -85,20 +85,20 @@ class _BiometricPageState extends ConsumerState<BiometricPage>
               children: [
                 if (state.supported)
                   const InfoCard(
-                    icon: Icons.fingerprint,
+                    icon: Icons.fingerprint_rounded,
                     colorScheme: 'info',
                     text: "Este dispositivo suporta autenticação biométrica.",
                   )
                 else
                   const InfoCard(
-                    icon: Icons.error,
+                    icon: Icons.error_rounded,
                     colorScheme: 'error',
                     text:
-                        "Este dispositivo não suporta autenticação biométrica.",
+                        "Este dispositivo não suporta autenticação biométrica ou não está habilitada nas configurações.",
                   ),
                 if (state.supported && !state.enabled) ...[
                   const InfoCard(
-                    icon: Icons.warning,
+                    icon: Icons.warning_rounded,
                     colorScheme: 'warning',
                     text:
                         "Não há biometria configurada. Por favor, configure a biometria nas configurações do dispositivo.",
@@ -115,7 +115,7 @@ class _BiometricPageState extends ConsumerState<BiometricPage>
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                       ),
-                      icon: const Icon(Icons.settings),
+                      icon: const Icon(Icons.settings_rounded),
                       label: Text(
                         "Abrir configurações",
                         style: const TextStyle(fontSize: 16.0),
@@ -138,7 +138,7 @@ class _BiometricPageState extends ConsumerState<BiometricPage>
                         borderRadius: BorderRadius.circular(10.0),
                       ),
                     ),
-                    icon: const Icon(Icons.fingerprint),
+                    icon: const Icon(Icons.fingerprint_rounded),
                     label: Text(
                       state.isAuthenticating
                           ? "Autenticando..."
