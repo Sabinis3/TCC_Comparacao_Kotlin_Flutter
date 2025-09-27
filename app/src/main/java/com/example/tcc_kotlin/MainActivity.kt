@@ -1,14 +1,20 @@
 package com.example.tcc_kotlin
 
 import android.Manifest
+import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothManager
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
@@ -21,32 +27,80 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.tcc_kotlin.screens.biometria.BiometriaScreen
+import com.example.tcc_kotlin.screens.bluetooth.BluetoothScreen
 import com.example.tcc_kotlin.screens.camera.CameraScreen
 import com.example.tcc_kotlin.screens.feedbackTatil.FeedbackTatilScreen
 import com.example.tcc_kotlin.screens.flash.FlashScreen
 import com.example.tcc_kotlin.ui.theme.TCC_KotlinTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : FragmentActivity() {
+
+    val bluetoothManager by lazy {
+        applicationContext.getSystemService(BluetoothManager::class.java)
+    }
+
+    val bluetoothAdapter by lazy {
+        bluetoothManager?.adapter
+    }
+
+    val isBluetoothEnabled: Boolean
+        get() = bluetoothAdapter?.isEnabled == true
+
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        val enableBluetoothLauncher = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) {
+            // Sem necessidade de implementação
+        }
+
+        val permissionLaucher = registerForActivityResult(
+            ActivityResultContracts.RequestMultiplePermissions()
+        ) { perms ->
+            val canEnableBluetooth = if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S){
+                perms[Manifest.permission.BLUETOOTH_CONNECT] == true
+            } else true
+
+            if (canEnableBluetooth && !isBluetoothEnabled){
+                enableBluetoothLauncher.launch(
+                    Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
+                )
+            }
+        }
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S){
+            permissionLaucher.launch(
+                arrayOf(
+                    Manifest.permission.BLUETOOTH_SCAN,
+                    Manifest.permission.BLUETOOTH_CONNECT
+                )
+            )
+        }
+
         setContent {
             TCC_KotlinTheme {
                 val navController = rememberNavController()
+
                 NavHost(navController, startDestination = "main") {
                     composable("main") {
                         MainScreen(
                             onBiometriaClick = { navController.navigate("biometria") },
                             onCameraClick = { navigateWithCameraPermissions(navController, "camera") },
                             onFeedbackTatilClick = { navController.navigate("feedbackTatil") },
-                            onFlashClick = { navigateWithCameraPermissions(navController, "flash") }
+                            onFlashClick = { navigateWithCameraPermissions(navController, "flash") },
+                            onBluetoothClick = { navController.navigate("bluetooth") }
                         )
                     }
                     composable("biometria") { BiometriaScreen(navController) }
                     composable("camera") { CameraScreen(navController) }
                     composable("feedbackTatil") { FeedbackTatilScreen(navController) }
                     composable("flash") { FlashScreen(navController) }
+                    composable("bluetooth") { BluetoothScreen((navController)) }
                 }
             }
         }
@@ -83,7 +137,8 @@ private fun MainScreen(
     onBiometriaClick: () -> Unit,
     onCameraClick: () -> Unit,
     onFeedbackTatilClick: () -> Unit,
-    onFlashClick: () -> Unit
+    onFlashClick: () -> Unit,
+    onBluetoothClick: () -> Unit
 ) {
     Surface(
         modifier = Modifier
@@ -103,6 +158,7 @@ private fun MainScreen(
             ActionButton("Câmera", onCameraClick)
             ActionButton("Vibração", onFeedbackTatilClick)
             ActionButton("Flash") { onFlashClick() }
+            ActionButton("Bluetooth") { onBluetoothClick() }
         }
     }
 }
