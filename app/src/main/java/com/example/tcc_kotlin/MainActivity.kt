@@ -23,6 +23,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.tcc_kotlin.screens.biometria.BiometriaScreen
 import com.example.tcc_kotlin.screens.camera.CameraScreen
 import com.example.tcc_kotlin.screens.feedbackTatil.FeedbackTatilScreen
+import com.example.tcc_kotlin.screens.flash.FlashScreen
 import com.example.tcc_kotlin.ui.theme.TCC_KotlinTheme
 
 class MainActivity : FragmentActivity() {
@@ -37,21 +38,23 @@ class MainActivity : FragmentActivity() {
                     composable("main") {
                         MainScreen(
                             onBiometriaClick = { navController.navigate("biometria") },
-                            onCameraClick = { handleCameraClick(navController) },
-                            onFeedbackTatilClick = { navController.navigate("feedbackTatil") }
+                            onCameraClick = { navigateWithCameraPermissions(navController, "camera") },
+                            onFeedbackTatilClick = { navController.navigate("feedbackTatil") },
+                            onFlashClick = { navigateWithCameraPermissions(navController, "flash") }
                         )
                     }
                     composable("biometria") { BiometriaScreen(navController) }
                     composable("camera") { CameraScreen(navController) }
                     composable("feedbackTatil") { FeedbackTatilScreen(navController) }
+                    composable("flash") { FlashScreen(navController) }
                 }
             }
         }
     }
 
-    private fun handleCameraClick(navController: androidx.navigation.NavController) {
+    private fun navigateWithCameraPermissions(navController: androidx.navigation.NavController, screen: String) {
         if (hasRequiredPermissions()) {
-            navController.navigate("camera")
+            navController.navigate(screen)
         } else {
             ActivityCompat.requestPermissions(
                 this,
@@ -79,7 +82,8 @@ class MainActivity : FragmentActivity() {
 private fun MainScreen(
     onBiometriaClick: () -> Unit,
     onCameraClick: () -> Unit,
-    onFeedbackTatilClick: () -> Unit
+    onFeedbackTatilClick: () -> Unit,
+    onFlashClick: () -> Unit
 ) {
     Surface(
         modifier = Modifier
@@ -98,6 +102,7 @@ private fun MainScreen(
             ActionButton("Biometria", onBiometriaClick)
             ActionButton("Câmera", onCameraClick)
             ActionButton("Vibração", onFeedbackTatilClick)
+            ActionButton("Flash") { onFlashClick() }
         }
     }
 }
