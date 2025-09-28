@@ -1,5 +1,6 @@
 import 'package:app_flutter_tcc/pages/biometric_page.dart';
 import 'package:app_flutter_tcc/pages/camera_page.dart';
+import 'package:app_flutter_tcc/pages/vibration_page.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {
@@ -15,9 +16,8 @@ class HomePage extends StatelessWidget {
         title: Text("Home TCC"),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(8.0),
         child: GridView.count(
-          shrinkWrap: true,
           crossAxisCount: 2,
           mainAxisSpacing: 16.0,
           crossAxisSpacing: 16.0,
@@ -61,7 +61,7 @@ class HomePage extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => BiometricPage()),
+                  MaterialPageRoute(builder: (context) => VibrationPage()),
                 );
               },
               style: FilledButton.styleFrom(

@@ -1,11 +1,13 @@
 import 'package:app_flutter_tcc/pages/home_page.dart';
 import 'package:app_flutter_tcc/utils/biometric_util.dart';
+import 'package:app_flutter_tcc/utils/vibration_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await BiometricUtil.initialize();
+  await VibrationUtil.initialize();
   runApp(ProviderScope(child: MyApp()));
 }
 
