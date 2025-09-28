@@ -1,4 +1,4 @@
-package com.example.tcc_kotlin.screens.bluetooth
+package com.example.tcc_kotlin.screens.bluetooth.data
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlin.collections.plus
 
 @SuppressLint("MissingPermission")
 class AndroidBluetoothController(

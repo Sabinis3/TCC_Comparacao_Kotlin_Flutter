@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
@@ -27,7 +26,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.tcc_kotlin.screens.biometria.BiometriaScreen
-import com.example.tcc_kotlin.screens.bluetooth.BluetoothScreen
+import com.example.tcc_kotlin.screens.bluetooth.ui.BluetoothScreen
 import com.example.tcc_kotlin.screens.camera.CameraScreen
 import com.example.tcc_kotlin.screens.feedbackTatil.FeedbackTatilScreen
 import com.example.tcc_kotlin.screens.flash.FlashScreen

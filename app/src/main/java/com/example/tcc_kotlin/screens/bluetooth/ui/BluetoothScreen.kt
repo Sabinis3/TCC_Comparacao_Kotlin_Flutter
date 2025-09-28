@@ -1,4 +1,4 @@
-package com.example.tcc_kotlin.screens.bluetooth
+package com.example.tcc_kotlin.screens.bluetooth.ui
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.tcc_kotlin.screens.bluetooth.data.BluetoothDevice
 
 @Composable
 fun BluetoothScreen(navController: NavController) {

@@ -1,4 +1,4 @@
-package com.example.tcc_kotlin.screens.bluetooth
+package com.example.tcc_kotlin.screens.bluetooth.data
 
 typealias BluetoothDeviceDomain = BluetoothDevice
 
