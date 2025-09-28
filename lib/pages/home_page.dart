@@ -1,5 +1,6 @@
 import 'package:app_flutter_tcc/pages/biometric_page.dart';
 import 'package:app_flutter_tcc/pages/camera_page.dart';
+import 'package:app_flutter_tcc/pages/flash_page.dart';
 import 'package:app_flutter_tcc/pages/vibration_page.dart';
 import 'package:flutter/material.dart';
 
@@ -77,7 +78,7 @@ class HomePage extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => BiometricPage()),
+                  MaterialPageRoute(builder: (context) => FlashPage()),
                 );
               },
               style: FilledButton.styleFrom(
