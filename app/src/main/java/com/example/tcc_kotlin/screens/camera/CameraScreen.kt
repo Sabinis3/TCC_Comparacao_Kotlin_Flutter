@@ -10,14 +10,21 @@ import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.ImageProxy
+import androidx.camera.video.FileOutputOptions
+import androidx.camera.video.Recording
+import androidx.camera.video.VideoRecordEvent
 import androidx.camera.view.CameraController
 import androidx.camera.view.LifecycleCameraController
 import androidx.camera.view.PreviewView
 import androidx.camera.view.video.AudioConfig
-import androidx.camera.video.FileOutputOptions
-import androidx.camera.video.Recording
-import androidx.camera.video.VideoRecordEvent
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.Cameraswitch
@@ -31,8 +38,16 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonColors
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.rememberBottomSheetScaffoldState
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -74,60 +89,58 @@ fun CameraScreen(navController: NavController) {
         disabledContentColor = Color.Gray
     )
 
-    BottomSheetScaffold(
-        scaffoldState = scaffoldState,
-        sheetPeekHeight = 0.dp,
-        sheetContent = {
-            PhotoBottomSheetContent(
-                bitmaps = bitmaps,
+        BottomSheetScaffold(
+            scaffoldState = scaffoldState,
+            sheetPeekHeight = 0.dp,
+            sheetContent = {
+                PhotoBottomSheetContent(
+                    bitmaps = bitmaps,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+        ) { paddingValues ->
+            Box(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .navigationBarsPadding()
-            )
-        }
-    ) { paddingValues ->
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-        ) {
-            CameraPreview(controller)
-            CameraTopBar(
-                onSwitchCamera = {
-                    controller.cameraSelector =
-                        if (controller.cameraSelector == CameraSelector.DEFAULT_BACK_CAMERA)
-                            CameraSelector.DEFAULT_FRONT_CAMERA
-                        else CameraSelector.DEFAULT_BACK_CAMERA
-                },
-                buttonColors = buttonColors
-            )
-            CameraActionBar(
-                onOpenGallery = {
-                    scope.launch { scaffoldState.bottomSheetState.expand() }
-                },
-                onTakePhoto = {
-                    capturePhoto(
-                        controller = controller,
-                        context = context,
-                        onPhotoTaken = viewModel::onTakePhoto
-                    )
-                },
-                onToggleVideo = {
-                    val (newRecording, nowRecording) =
-                        toggleRecording(controller, recording, context)
-                    recording = newRecording
-                    isRecording = nowRecording
-                },
-                onBack = { navController.navigate("main") },
-                isRecording = isRecording,
-                buttonColors = buttonColors,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .navigationBarsPadding()
-                    .align(Alignment.BottomCenter)
-                    .padding(16.dp)
-            )
-        }
+                    .fillMaxSize()
+                    .padding(paddingValues)
+            ) {
+                CameraPreview(controller)
+                CameraTopBar(
+                    onSwitchCamera = {
+                        controller.cameraSelector =
+                            if (controller.cameraSelector == CameraSelector.DEFAULT_BACK_CAMERA)
+                                CameraSelector.DEFAULT_FRONT_CAMERA
+                            else CameraSelector.DEFAULT_BACK_CAMERA
+                    },
+                    buttonColors = buttonColors
+                )
+                CameraActionBar(
+                    onOpenGallery = {
+                        scope.launch { scaffoldState.bottomSheetState.expand() }
+                    },
+                    onTakePhoto = {
+                        capturePhoto(
+                            controller = controller,
+                            context = context,
+                            onPhotoTaken = viewModel::onTakePhoto
+                        )
+                    },
+                    onToggleVideo = {
+                        val (newRecording, nowRecording) =
+                            toggleRecording(controller, recording, context)
+                        recording = newRecording
+                        isRecording = nowRecording
+                    },
+                    onBack = { navController.navigate("main") },
+                    isRecording = isRecording,
+                    buttonColors = buttonColors,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .navigationBarsPadding()
+                        .align(Alignment.BottomCenter)
+                        .padding(16.dp)
+                )
+            }
     }
 }
 

@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
@@ -27,51 +28,54 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FlashScreen(navController: NavController) {
     val context = LocalContext.current
     var isFlashOn by remember { mutableStateOf(false) }
 
-    Surface(
-        modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colorScheme.background
-    ) {
-        Column(
+        Surface(
             modifier = Modifier
-                .fillMaxSize()
-                .statusBarsPadding()
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+                        .fillMaxSize(),
+            color = MaterialTheme.colorScheme.background
         ) {
-            OutlinedButton(
-                onClick = {
-                    isFlashOn = !isFlashOn
-                    setFlash(context, isFlashOn)
-                },
-                modifier = Modifier.width(200.dp),
-                shape = RoundedCornerShape(4.dp)
-            ) {
-                Text(
-                    text = if (isFlashOn) "Desligar Flash" else "Ligar Flash",
-                    fontSize = 12.sp,
-                    textAlign = TextAlign.Center
-                )
-            }
-            Spacer(modifier = Modifier.height(16.dp))
-            OutlinedButton (
-                onClick = { navController.navigate("main") },
+            Column(
                 modifier = Modifier
-                    .width(200.dp),
-                shape = RoundedCornerShape(4.dp)
+                    .fillMaxSize()
+                    .statusBarsPadding()
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
             ) {
-                Text(
-                    text = "Voltar",
-                    fontSize = 12.sp,
-                    textAlign = TextAlign.Center)
+                OutlinedButton(
+                    onClick = {
+                        isFlashOn = !isFlashOn
+                        setFlash(context, isFlashOn)
+                    },
+                    modifier = Modifier.width(200.dp),
+                    shape = RoundedCornerShape(4.dp)
+                ) {
+                    Text(
+                        text = if (isFlashOn) "Desligar Flash" else "Ligar Flash",
+                        fontSize = 12.sp,
+                        textAlign = TextAlign.Center
+                    )
+                }
+                Spacer(modifier = Modifier.height(16.dp))
+                OutlinedButton (
+                    onClick = { navController.navigate("main") },
+                    modifier = Modifier
+                        .width(200.dp),
+                    shape = RoundedCornerShape(4.dp)
+                ) {
+                    Text(
+                        text = "Voltar",
+                        fontSize = 12.sp,
+                        textAlign = TextAlign.Center)
+                }
             }
         }
-    }
 }
 
 private fun setFlash(context: Context, state: Boolean) {

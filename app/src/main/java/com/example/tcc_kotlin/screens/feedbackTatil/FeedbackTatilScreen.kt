@@ -5,15 +5,13 @@ import android.os.Build
 import android.os.VibrationEffect
 import android.os.Vibrator
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
@@ -29,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FeedbackTatilScreen(navController: NavController) {
     val context = LocalContext.current
@@ -70,115 +69,99 @@ fun FeedbackTatilScreen(navController: NavController) {
             )
         }
     }
-
-    fun vibrateWithHapticLongPress() {
-        composeHaptic.performHapticFeedback(HapticFeedbackType.LongPress);
-    }
-
-    fun vibrateWithHapticVirtualKey() {
-        composeHaptic.performHapticFeedback(HapticFeedbackType.VirtualKey);
-    }
-
-    fun vibrateWithHapticKeyboardTap() {
-        composeHaptic.performHapticFeedback(HapticFeedbackType.KeyboardTap);
-    }
-
-    Surface(
-        modifier = Modifier
-                    .fillMaxSize()
-                    .navigationBarsPadding()
-                    .systemBarsPadding(),
-        color = MaterialTheme.colorScheme.background
-    ) {
-        Column (
+        Surface(
             modifier = Modifier
-                .fillMaxSize()
-                .statusBarsPadding()
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceAround
-        ){
+                .fillMaxSize(),
+            color = MaterialTheme.colorScheme.background
+        ) {
             Column (
                 modifier = Modifier
+                    .fillMaxSize()
+                    .statusBarsPadding()
                     .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
+                verticalArrangement = Arrangement.SpaceAround
             ){
-                Text(
-                    text = "Feedback Tátil - VibrationEffect",
-                    fontSize = 20.sp,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.padding(bottom = 24.dp)
-                )
-                OutlinedButton(
-                    onClick = { vibrate(80) },
-                    modifier = Modifier.width(200.dp),
-                    shape = RoundedCornerShape(4.dp)
-                ) {
-                    Text("Pulso único", fontSize = 12.sp, textAlign = TextAlign.Center)
-                }
-                OutlinedButton(
-                    onClick = { vibrateWaveform() },
-                    modifier = Modifier.width(200.dp),
-                    shape = RoundedCornerShape(4.dp)
-                ) {
-                    Text("Forma de onda", fontSize = 12.sp, textAlign = TextAlign.Center)
-                }
-                OutlinedButton(
-                    onClick = { vibrateWaveformWithAmplitude() },
-                    modifier = Modifier.width(200.dp),
-                    shape = RoundedCornerShape(4.dp)
-                ) {
-                    Text("Forma de onda com amplitude", fontSize = 12.sp, textAlign = TextAlign.Center)
-                }
-                Text(
-                    text = "Feedback Tátil - HapticFeedbackType",
-                    fontSize = 20.sp,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.padding(bottom = 24.dp, top = 24.dp)
-                )
-                OutlinedButton(
-                    onClick = {
-                        composeHaptic.performHapticFeedback(HapticFeedbackType.KeyboardTap);
-                    },
-                    modifier = Modifier.width(200.dp),
-                    shape = RoundedCornerShape(4.dp)
-                ) {
-                    Text("Vibração suave com Haptic", fontSize = 12.sp, textAlign = TextAlign.Center)
-                }
-                OutlinedButton(
-                    onClick = {
-                        composeHaptic.performHapticFeedback(HapticFeedbackType.KeyboardTap);
-                    },
-                    modifier = Modifier.width(200.dp),
-                    shape = RoundedCornerShape(4.dp)
-                ) {
-                    Text("Vibração longa com Haptic", fontSize = 12.sp, textAlign = TextAlign.Center)
-                }
-                OutlinedButton(
-                    onClick = {
-                        composeHaptic.performHapticFeedback(HapticFeedbackType.KeyboardTap);
-                    },
-                    modifier = Modifier.width(200.dp),
-                    shape = RoundedCornerShape(4.dp)
-                ) {
-                    Text("Vibração para teclado virtual com Haptic", fontSize = 12.sp, textAlign = TextAlign.Center)
-                }
+                Column (
+                    modifier = Modifier
+                        .padding(16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ){
+                    Text(
+                        text = "Feedback Tátil - VibrationEffect",
+                        fontSize = 20.sp,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(bottom = 24.dp)
+                    )
+                    OutlinedButton(
+                        onClick = { vibrate(80) },
+                        modifier = Modifier.width(200.dp),
+                        shape = RoundedCornerShape(4.dp)
+                    ) {
+                        Text("Pulso único", fontSize = 12.sp, textAlign = TextAlign.Center)
+                    }
+                    OutlinedButton(
+                        onClick = { vibrateWaveform() },
+                        modifier = Modifier.width(200.dp),
+                        shape = RoundedCornerShape(4.dp)
+                    ) {
+                        Text("Forma de onda", fontSize = 12.sp, textAlign = TextAlign.Center)
+                    }
+                    OutlinedButton(
+                        onClick = { vibrateWaveformWithAmplitude() },
+                        modifier = Modifier.width(200.dp),
+                        shape = RoundedCornerShape(4.dp)
+                    ) {
+                        Text("Forma de onda com amplitude", fontSize = 12.sp, textAlign = TextAlign.Center)
+                    }
+                    Text(
+                        text = "Feedback Tátil - HapticFeedbackType",
+                        fontSize = 20.sp,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(bottom = 24.dp, top = 24.dp)
+                    )
+                    OutlinedButton(
+                        onClick = {
+                            composeHaptic.performHapticFeedback(HapticFeedbackType.KeyboardTap)
+                        },
+                        modifier = Modifier.width(200.dp),
+                        shape = RoundedCornerShape(4.dp)
+                    ) {
+                        Text("Vibração suave com Haptic", fontSize = 12.sp, textAlign = TextAlign.Center)
+                    }
+                    OutlinedButton(
+                        onClick = {
+                            composeHaptic.performHapticFeedback(HapticFeedbackType.KeyboardTap)
+                        },
+                        modifier = Modifier.width(200.dp),
+                        shape = RoundedCornerShape(4.dp)
+                    ) {
+                        Text("Vibração longa com Haptic", fontSize = 12.sp, textAlign = TextAlign.Center)
+                    }
+                    OutlinedButton(
+                        onClick = {
+                            composeHaptic.performHapticFeedback(HapticFeedbackType.KeyboardTap)
+                        },
+                        modifier = Modifier.width(200.dp),
+                        shape = RoundedCornerShape(4.dp)
+                    ) {
+                        Text("Vibração para teclado virtual com Haptic", fontSize = 12.sp, textAlign = TextAlign.Center)
+                    }
 
+                }
+                OutlinedButton (
+                    onClick = { navController.navigate("main") },
+                    modifier = Modifier
+                        .width(200.dp),
+                    shape = RoundedCornerShape(4.dp)
+                ) {
+                    Text(
+                        text = "Voltar",
+                        fontSize = 12.sp,
+                        textAlign = TextAlign.Center)
+                }
             }
-            OutlinedButton (
-                onClick = { navController.navigate("main") },
-                modifier = Modifier
-                    .width(200.dp),
-                shape = RoundedCornerShape(4.dp)
-            ) {
-                Text(
-                    text = "Voltar",
-                    fontSize = 12.sp,
-                    textAlign = TextAlign.Center)
-            }
+
         }
-
-
-    }
 }

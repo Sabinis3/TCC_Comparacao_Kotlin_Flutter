@@ -18,13 +18,11 @@ class BluetoothViewModel @Inject constructor(
     private val _state = MutableStateFlow(BluetoothUiState())
     val state = combine(
         bluetoothController.scannedDevices,
-        bluetoothController.pairedDevices,
         _state
     ) {
-        scannedDevices, pairedDevices, state ->
+        scannedDevices, state ->
         state.copy(
-            scannedDevices = scannedDevices,
-            pairedDevices = pairedDevices
+            scannedDevices = scannedDevices
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), _state.value)
 

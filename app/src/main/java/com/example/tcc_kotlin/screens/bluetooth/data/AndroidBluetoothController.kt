@@ -29,20 +29,11 @@ class AndroidBluetoothController(
     override val scannedDevices: StateFlow<List<BluetoothDevice>>
         get() = _scannedDevices.asStateFlow()
 
-    private  val _pairedDevices = MutableStateFlow<List<BluetoothDeviceDomain>>(emptyList())
-
-    override val pairedDevices: StateFlow<List<BluetoothDevice>>
-        get() = _pairedDevices.asStateFlow()
-
     private val foundDeviceReceiver = FoundDeviceReceiver{ device ->
         _scannedDevices.update { devices ->
             val newDevice = device.toBluetoothDeviceDomain()
             if(newDevice in devices) devices else devices + newDevice
         }
-    }
-
-    init {
-        updatePairedDevices()
     }
 
     override fun startDiscovery() {
@@ -53,7 +44,6 @@ class AndroidBluetoothController(
             foundDeviceReceiver,
             IntentFilter(android.bluetooth.BluetoothDevice.ACTION_FOUND)
         )
-        updatePairedDevices()
         bluetoothAdapter?.startDiscovery()
     }
 
@@ -62,26 +52,13 @@ class AndroidBluetoothController(
             return
         }
 
-        bluetoothAdapter?.cancelDiscovery();
+        bluetoothAdapter?.cancelDiscovery()
     }
 
     override fun release() {
         context.unregisterReceiver(foundDeviceReceiver)
     }
 
-    private fun updatePairedDevices() {
-        if(!hasPermission(Manifest.permission.BLUETOOTH_CONNECT)){
-            return
-        }
-        bluetoothAdapter?.bondedDevices?.map {
-            it.toBluetoothDeviceDomain()
-        }
-            ?.also { devices ->
-                _pairedDevices.update {
-                    devices
-                }
-            }
-    }
 
     private fun hasPermission(permission: String): Boolean {
         return context.checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED

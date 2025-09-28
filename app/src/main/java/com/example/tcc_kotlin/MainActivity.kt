@@ -10,21 +10,45 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.rounded.Bluetooth
+import androidx.compose.material.icons.rounded.CameraAlt
+import androidx.compose.material.icons.rounded.Fingerprint
+import androidx.compose.material.icons.rounded.FlashOn
+import androidx.compose.material.icons.rounded.Vibration
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.tcc_kotlin.components.GridActionButton
 import com.example.tcc_kotlin.screens.biometria.BiometriaScreen
 import com.example.tcc_kotlin.screens.bluetooth.ui.BluetoothScreen
 import com.example.tcc_kotlin.screens.camera.CameraScreen
@@ -46,6 +70,13 @@ class MainActivity : FragmentActivity() {
 
     val isBluetoothEnabled: Boolean
         get() = bluetoothAdapter?.isEnabled == true
+
+    companion object {
+        private val CAMERAX_PERMISSIONS = arrayOf(
+            Manifest.permission.CAMERA,
+            Manifest.permission.RECORD_AUDIO
+        )
+    }
 
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -84,24 +115,68 @@ class MainActivity : FragmentActivity() {
         setContent {
             TCC_KotlinTheme {
                 val navController = rememberNavController()
+                val backStackEntry by navController.currentBackStackEntryAsState()
+                val route = backStackEntry?.destination?.route ?: "main"
+                val isMain = route == "main"
 
-                NavHost(navController, startDestination = "main") {
-                    composable("main") {
-                        MainScreen(
-                            onBiometriaClick = { navController.navigate("biometria") },
-                            onCameraClick = { navigateWithCameraPermissions(navController, "camera") },
-                            onFeedbackTatilClick = { navController.navigate("feedbackTatil") },
-                            onFlashClick = { navigateWithCameraPermissions(navController, "flash") },
-                            onBluetoothClick = { navController.navigate("bluetooth") }
+                Scaffold(
+                    topBar = {
+                        TopAppBar(
+                            title = { Text(getTitleForRoute(route)) },
+                            navigationIcon = {
+                                if (!isMain) {
+                                    IconButton(onClick = { navController.popBackStack() }) {
+                                        Icon(Icons.AutoMirrored.Filled.ArrowBack , contentDescription = "Voltar")
+                                    }
+                                } else {
+                                    IconButton(onClick = { }) {
+                                        Icon(Icons.Filled.Home, contentDescription = "Home")
+                                    }
+                                }
+                            },
+                            colors = TopAppBarDefaults.topAppBarColors(
+                                containerColor = MaterialTheme.colorScheme.primary
+                            )
                         )
+                    },
+                    containerColor = MaterialTheme.colorScheme.background
+                ) { innerPadding ->
+                    NavHost(
+                        navController = navController,
+                        startDestination = "main",
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(innerPadding)
+                    ) {
+                        composable("main") {
+                            MainScreen(
+                                onBiometriaClick = { navController.navigate("biometria") },
+                                onCameraClick = { navigateWithCameraPermissions(navController, "camera") },
+                                onFeedbackTatilClick = { navController.navigate("feedbackTatil") },
+                                onFlashClick = { navigateWithCameraPermissions(navController, "flash") },
+                                onBluetoothClick = { navController.navigate("bluetooth") }
+                            )
+                        }
+                        composable("biometria") { BiometriaScreen(navController) }
+                        composable("camera") { CameraScreen(navController) }
+                        composable("feedbackTatil") { FeedbackTatilScreen(navController) }
+                        composable("flash") { FlashScreen(navController) }
+                        composable("bluetooth") { BluetoothScreen(navController) }
                     }
-                    composable("biometria") { BiometriaScreen(navController) }
-                    composable("camera") { CameraScreen(navController) }
-                    composable("feedbackTatil") { FeedbackTatilScreen(navController) }
-                    composable("flash") { FlashScreen(navController) }
-                    composable("bluetooth") { BluetoothScreen((navController)) }
                 }
             }
+        }
+    }
+
+    private fun getTitleForRoute(route: String?): String {
+        return when (route) {
+            "main" -> "Tela Principal"
+            "biometria" -> "Biometria"
+            "camera" -> "Câmera"
+            "feedbackTatil" -> "Feedback Tátil"
+            "flash" -> "Flash"
+            "bluetooth" -> "Bluetooth"
+            else -> "App"
         }
     }
 
@@ -123,12 +198,6 @@ class MainActivity : FragmentActivity() {
         }
     }
 
-    companion object {
-        private val CAMERAX_PERMISSIONS = arrayOf(
-            Manifest.permission.CAMERA,
-            Manifest.permission.RECORD_AUDIO
-        )
-    }
 }
 
 @Composable
@@ -145,34 +214,21 @@ private fun MainScreen(
             .windowInsetsPadding(WindowInsets.safeDrawing),
         color = MaterialTheme.colorScheme.background
     ) {
-        Column(
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(2),
             modifier = Modifier
                 .fillMaxSize()
                 .statusBarsPadding()
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+                .padding(8.dp),
+            contentPadding = PaddingValues(0.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            ActionButton("Biometria", onBiometriaClick)
-            ActionButton("Câmera", onCameraClick)
-            ActionButton("Vibração", onFeedbackTatilClick)
-            ActionButton("Flash") { onFlashClick() }
-            ActionButton("Bluetooth") { onBluetoothClick() }
+            item { GridActionButton("Biometria", Icons.Rounded.Fingerprint, onBiometriaClick) }
+            item { GridActionButton("Câmera", Icons.Rounded.CameraAlt, onCameraClick) }
+            item { GridActionButton("Vibração", Icons.Rounded.Vibration, onFeedbackTatilClick) }
+            item { GridActionButton("Flash", Icons.Rounded.FlashOn, onFlashClick) }
+            item { GridActionButton("Bluetooth", Icons.Rounded.Bluetooth, onBluetoothClick) }
         }
-    }
-}
-
-@Composable
-private fun ActionButton(text: String, onClick: () -> Unit) {
-    OutlinedButton(
-        onClick = onClick,
-        modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
-        shape = RoundedCornerShape(4.dp)
-    ) {
-        Text(
-            text = text,
-            fontSize = 12.sp,
-            textAlign = TextAlign.Center
-        )
     }
 }

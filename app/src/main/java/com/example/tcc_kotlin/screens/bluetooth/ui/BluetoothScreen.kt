@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -26,60 +27,59 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.tcc_kotlin.screens.bluetooth.data.BluetoothDevice
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BluetoothScreen(navController: NavController) {
 
     val viewModel = hiltViewModel<BluetoothViewModel>()
     val state by viewModel.state.collectAsState()
 
-    Surface(
-        modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colorScheme.background
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .statusBarsPadding()
-                .navigationBarsPadding()
-                .padding(16.dp),
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colorScheme.background
         ) {
-            BluetoothDeviceList(
-                state.pairedDevices,
-                state.scannedDevices,
-                onClick = {},
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f)
-            )
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceAround
+                    .fillMaxSize()
+                    .statusBarsPadding()
+                    .navigationBarsPadding()
+                    .padding(16.dp),
             ) {
-                Button(
-                    onClick = viewModel::startScan
+                BluetoothDeviceList(
+                    state.scannedDevices,
+                    onClick = {},
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f)
+                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceAround
                 ) {
-                    Text("Escanear")
-                }
-                Button(
-                    onClick = viewModel::stopScan
-                ) {
-                    Text("Parar")
-                }
-                Button(
-                    onClick = {
-                        navController.navigate("main")
+                    Button(
+                        onClick = viewModel::startScan
+                    ) {
+                        Text("Escanear")
                     }
-                ) {
-                    Text("Voltar")
+                    Button(
+                        onClick = viewModel::stopScan
+                    ) {
+                        Text("Parar")
+                    }
+                    Button(
+                        onClick = {
+                            navController.navigate("main")
+                        }
+                    ) {
+                        Text("Voltar")
+                    }
                 }
             }
         }
-    }
 }
 
 @Composable
 fun BluetoothDeviceList(
-    pairedDevices: List<BluetoothDevice>,
     scannedDevices: List<BluetoothDevice>,
     onClick: (BluetoothDevice) -> Unit,
     modifier: Modifier
@@ -87,27 +87,6 @@ fun BluetoothDeviceList(
     LazyColumn (
         modifier = modifier
     ){
-        item {
-            Text(
-                text = "Paired Devices",
-                fontWeight = FontWeight.Bold,
-                fontSize = 24.sp,
-                modifier = Modifier.padding(16.dp)
-            )
-        }
-        items(pairedDevices){ device ->
-            Text(
-                text = device.name ?: "Sem nome",
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable {
-                        onClick(device)
-                    }
-                    .padding(16.dp)
-
-            )
-        }
-
         item {
             Text(
                 text = "Scanned Devices",
