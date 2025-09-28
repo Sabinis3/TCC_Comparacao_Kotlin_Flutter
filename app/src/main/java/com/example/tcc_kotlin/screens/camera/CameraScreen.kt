@@ -26,7 +26,6 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.Cameraswitch
 import androidx.compose.material.icons.filled.Photo
 import androidx.compose.material.icons.filled.PhotoCamera
@@ -57,13 +56,12 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
 import kotlinx.coroutines.launch
 import java.io.File
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CameraScreen(navController: NavController) {
+fun CameraScreen() {
     val scaffoldState = rememberBottomSheetScaffoldState()
     val scope = rememberCoroutineScope()
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -131,7 +129,6 @@ fun CameraScreen(navController: NavController) {
                         recording = newRecording
                         isRecording = nowRecording
                     },
-                    onBack = { navController.navigate("main") },
                     isRecording = isRecording,
                     buttonColors = buttonColors,
                     modifier = Modifier
@@ -199,7 +196,6 @@ private fun CameraActionBar(
     onOpenGallery: () -> Unit,
     onTakePhoto: () -> Unit,
     onToggleVideo: () -> Unit,
-    onBack: () -> Unit,
     isRecording: Boolean,
     buttonColors: IconButtonColors,
     modifier: Modifier
@@ -220,9 +216,6 @@ private fun CameraActionBar(
                 contentDescription = if (isRecording) "Stop recording" else "Record video",
                 tint = if (isRecording) Color.Red else Color.White
             )
-        }
-        IconButton(onClick = onBack, colors = buttonColors) {
-            Icon(Icons.Default.ArrowBackIosNew, contentDescription = "Back")
         }
     }
 }

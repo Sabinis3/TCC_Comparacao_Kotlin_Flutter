@@ -1,5 +1,6 @@
 package com.example.tcc_kotlin.screens.biometria
 
+import android.content.Context
 import android.widget.Toast
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
@@ -24,14 +25,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
-import androidx.navigation.NavController
 import java.util.concurrent.Executor
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BiometriaScreen(navController: NavController) {
+fun BiometriaScreen() {
 
-    val biometricManager = BiometricManager.from(navController.context)
+    val context: Context = LocalContext.current
+    val biometricManager = BiometricManager.from(context)
     val activity = LocalContext.current as FragmentActivity
 
         Surface(
@@ -55,7 +56,7 @@ fun BiometriaScreen(navController: NavController) {
                             BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE,
                             BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE,
                             BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED -> {
-                                Toast.makeText(navController.context, "Biometria não está disponível", Toast.LENGTH_LONG).show()
+                                Toast.makeText(context, "Biometria não está disponível", Toast.LENGTH_LONG).show()
                             }
                         }
                     },
@@ -68,17 +69,6 @@ fun BiometriaScreen(navController: NavController) {
                         fontSize = 12.sp,
                         textAlign = TextAlign.Center
                     )
-                }
-                OutlinedButton (
-                    onClick = { navController.navigate("main") },
-                    modifier = Modifier
-                        .width(200.dp),
-                    shape = RoundedCornerShape(4.dp)
-                ) {
-                    Text(
-                        text = "Voltar",
-                        fontSize = 12.sp,
-                        textAlign = TextAlign.Center)
                 }
 
             }

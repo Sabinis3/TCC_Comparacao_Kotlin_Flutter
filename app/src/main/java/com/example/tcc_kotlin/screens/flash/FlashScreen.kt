@@ -4,9 +4,7 @@ import android.content.Context
 import android.hardware.camera2.CameraManager
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
@@ -27,11 +25,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FlashScreen(navController: NavController) {
+fun FlashScreen() {
     val context = LocalContext.current
     var isFlashOn by remember { mutableStateOf(false) }
 
@@ -61,18 +58,6 @@ fun FlashScreen(navController: NavController) {
                         fontSize = 12.sp,
                         textAlign = TextAlign.Center
                     )
-                }
-                Spacer(modifier = Modifier.height(16.dp))
-                OutlinedButton (
-                    onClick = { navController.navigate("main") },
-                    modifier = Modifier
-                        .width(200.dp),
-                    shape = RoundedCornerShape(4.dp)
-                ) {
-                    Text(
-                        text = "Voltar",
-                        fontSize = 12.sp,
-                        textAlign = TextAlign.Center)
                 }
             }
         }

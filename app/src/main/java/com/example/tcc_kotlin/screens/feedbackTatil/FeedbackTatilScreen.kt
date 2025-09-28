@@ -25,11 +25,10 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FeedbackTatilScreen(navController: NavController) {
+fun FeedbackTatilScreen() {
     val context = LocalContext.current
     val composeHaptic = LocalHapticFeedback.current
     val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
@@ -149,17 +148,6 @@ fun FeedbackTatilScreen(navController: NavController) {
                         Text("Vibração para teclado virtual com Haptic", fontSize = 12.sp, textAlign = TextAlign.Center)
                     }
 
-                }
-                OutlinedButton (
-                    onClick = { navController.navigate("main") },
-                    modifier = Modifier
-                        .width(200.dp),
-                    shape = RoundedCornerShape(4.dp)
-                ) {
-                    Text(
-                        text = "Voltar",
-                        fontSize = 12.sp,
-                        textAlign = TextAlign.Center)
                 }
             }
 

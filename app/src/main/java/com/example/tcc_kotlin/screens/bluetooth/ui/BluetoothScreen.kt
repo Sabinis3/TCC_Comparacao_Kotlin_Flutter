@@ -24,12 +24,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import com.example.tcc_kotlin.screens.bluetooth.data.BluetoothDevice
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BluetoothScreen(navController: NavController) {
+fun BluetoothScreen() {
 
     val viewModel = hiltViewModel<BluetoothViewModel>()
     val state by viewModel.state.collectAsState()
@@ -65,13 +64,6 @@ fun BluetoothScreen(navController: NavController) {
                         onClick = viewModel::stopScan
                     ) {
                         Text("Parar")
-                    }
-                    Button(
-                        onClick = {
-                            navController.navigate("main")
-                        }
-                    ) {
-                        Text("Voltar")
                     }
                 }
             }

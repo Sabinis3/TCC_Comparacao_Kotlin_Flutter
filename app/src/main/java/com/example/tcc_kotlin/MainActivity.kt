@@ -27,6 +27,7 @@ import androidx.compose.material.icons.rounded.Bluetooth
 import androidx.compose.material.icons.rounded.CameraAlt
 import androidx.compose.material.icons.rounded.Fingerprint
 import androidx.compose.material.icons.rounded.FlashOn
+import androidx.compose.material.icons.rounded.Mic
 import androidx.compose.material.icons.rounded.Vibration
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -49,6 +50,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.tcc_kotlin.components.GridActionButton
+import com.example.tcc_kotlin.screens.audio.AudioScreen
 import com.example.tcc_kotlin.screens.biometria.BiometriaScreen
 import com.example.tcc_kotlin.screens.bluetooth.ui.BluetoothScreen
 import com.example.tcc_kotlin.screens.camera.CameraScreen
@@ -154,14 +156,16 @@ class MainActivity : FragmentActivity() {
                                 onCameraClick = { navigateWithCameraPermissions(navController, "camera") },
                                 onFeedbackTatilClick = { navController.navigate("feedbackTatil") },
                                 onFlashClick = { navigateWithCameraPermissions(navController, "flash") },
-                                onBluetoothClick = { navController.navigate("bluetooth") }
+                                onBluetoothClick = { navController.navigate("bluetooth") },
+                                onAudioClick = { navigateWithAudioPermissions(navController, "audio") }
                             )
                         }
-                        composable("biometria") { BiometriaScreen(navController) }
-                        composable("camera") { CameraScreen(navController) }
-                        composable("feedbackTatil") { FeedbackTatilScreen(navController) }
-                        composable("flash") { FlashScreen(navController) }
-                        composable("bluetooth") { BluetoothScreen(navController) }
+                        composable("biometria") { BiometriaScreen() }
+                        composable("camera") { CameraScreen() }
+                        composable("feedbackTatil") { FeedbackTatilScreen() }
+                        composable("flash") { FlashScreen() }
+                        composable("bluetooth") { BluetoothScreen() }
+                        composable("audio") { AudioScreen() }
                     }
                 }
             }
@@ -176,6 +180,7 @@ class MainActivity : FragmentActivity() {
             "feedbackTatil" -> "Feedback Tátil"
             "flash" -> "Flash"
             "bluetooth" -> "Bluetooth"
+            "audio" -> "Áudio"
             else -> "App"
         }
     }
@@ -187,6 +192,18 @@ class MainActivity : FragmentActivity() {
             ActivityCompat.requestPermissions(
                 this,
                 CAMERAX_PERMISSIONS,
+                0
+            )
+        }
+    }
+
+    private fun navigateWithAudioPermissions(navController: androidx.navigation.NavController, screen: String) {
+        if (hasRequiredPermissions()) {
+            navController.navigate(screen)
+        } else {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.RECORD_AUDIO),
                 0
             )
         }
@@ -206,7 +223,8 @@ private fun MainScreen(
     onCameraClick: () -> Unit,
     onFeedbackTatilClick: () -> Unit,
     onFlashClick: () -> Unit,
-    onBluetoothClick: () -> Unit
+    onBluetoothClick: () -> Unit,
+    onAudioClick: () -> Unit
 ) {
     Surface(
         modifier = Modifier
@@ -229,6 +247,7 @@ private fun MainScreen(
             item { GridActionButton("Vibração", Icons.Rounded.Vibration, onFeedbackTatilClick) }
             item { GridActionButton("Flash", Icons.Rounded.FlashOn, onFlashClick) }
             item { GridActionButton("Bluetooth", Icons.Rounded.Bluetooth, onBluetoothClick) }
+            item { GridActionButton("Áudio", Icons.Rounded.Mic, onAudioClick) }
         }
     }
 }
