@@ -267,14 +267,9 @@ class _CameraPageState extends State<CameraPage> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    var theme = Theme.of(context);
-
     if (_errorMessage != null) {
       return Scaffold(
-        appBar: AppBar(
-          title: const Text('Câmera'),
-          backgroundColor: theme.colorScheme.inversePrimary,
-        ),
+        appBar: AppBar(title: const Text('Câmera')),
         body: Center(
           child: Text(
             _errorMessage!,
@@ -287,19 +282,13 @@ class _CameraPageState extends State<CameraPage> with WidgetsBindingObserver {
 
     if (_controller == null || _initializeControllerFuture == null) {
       return Scaffold(
-        appBar: AppBar(
-          title: const Text('Câmera'),
-          backgroundColor: theme.colorScheme.inversePrimary,
-        ),
+        appBar: AppBar(title: const Text('Câmera')),
         body: Center(child: CircularProgressIndicator()),
       );
     }
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Câmera'),
-        backgroundColor: theme.colorScheme.inversePrimary,
-      ),
+      appBar: AppBar(title: const Text('Câmera')),
       body: Stack(
         children: [
           FutureBuilder<void>(

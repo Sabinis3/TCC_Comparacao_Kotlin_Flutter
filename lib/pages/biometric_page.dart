@@ -67,13 +67,9 @@ class _BiometricPageState extends ConsumerState<BiometricPage>
   @override
   Widget build(BuildContext context) {
     final biometricAsync = ref.watch(biometricProvider);
-    var theme = Theme.of(context);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Biometria"),
-        backgroundColor: theme.colorScheme.inversePrimary,
-      ),
+      appBar: AppBar(title: const Text("Biometria")),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Center(

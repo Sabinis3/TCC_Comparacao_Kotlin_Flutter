@@ -9,13 +9,8 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var theme = Theme.of(context);
-
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: theme.colorScheme.inversePrimary,
-        title: Text("Home TCC"),
-      ),
+      appBar: AppBar(title: Text("Home TCC")),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: GridView.count(

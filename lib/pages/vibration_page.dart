@@ -16,13 +16,8 @@ class _VibrationPageState extends State<VibrationPage> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Vibração"),
-        backgroundColor: theme.colorScheme.inversePrimary,
-      ),
+      appBar: AppBar(title: const Text("Vibração")),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Center(
