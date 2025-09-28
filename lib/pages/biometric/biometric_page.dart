@@ -2,7 +2,7 @@ import 'package:app_flutter_tcc/utils/biometric_util.dart';
 import 'package:app_flutter_tcc/widgets/info_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../providers/biometric_notifier_provider.dart';
+import '../../providers/biometric_notifier_provider.dart';
 
 class BiometricPage extends ConsumerStatefulWidget {
   const BiometricPage({super.key});

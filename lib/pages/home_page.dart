@@ -1,7 +1,7 @@
-import 'package:app_flutter_tcc/pages/biometric_page.dart';
-import 'package:app_flutter_tcc/pages/camera_page.dart';
-import 'package:app_flutter_tcc/pages/flash_page.dart';
-import 'package:app_flutter_tcc/pages/vibration_page.dart';
+import 'package:app_flutter_tcc/pages/biometric/biometric_page.dart';
+import 'package:app_flutter_tcc/pages/camera/camera_page.dart';
+import 'package:app_flutter_tcc/pages/flash/flash_page.dart';
+import 'package:app_flutter_tcc/pages/vibration/vibration_page.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {
