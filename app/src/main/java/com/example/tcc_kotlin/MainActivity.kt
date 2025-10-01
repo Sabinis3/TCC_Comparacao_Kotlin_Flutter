@@ -23,6 +23,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Wifi
 import androidx.compose.material.icons.rounded.Bluetooth
 import androidx.compose.material.icons.rounded.CameraAlt
 import androidx.compose.material.icons.rounded.Fingerprint
@@ -56,6 +57,7 @@ import com.example.tcc_kotlin.screens.bluetooth.ui.BluetoothScreen
 import com.example.tcc_kotlin.screens.camera.CameraScreen
 import com.example.tcc_kotlin.screens.feedbackTatil.FeedbackTatilScreen
 import com.example.tcc_kotlin.screens.flash.FlashScreen
+import com.example.tcc_kotlin.screens.wifi.WifiScreen
 import com.example.tcc_kotlin.ui.theme.TCC_KotlinTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -72,13 +74,6 @@ class MainActivity : FragmentActivity() {
 
     val isBluetoothEnabled: Boolean
         get() = bluetoothAdapter?.isEnabled == true
-
-    companion object {
-        private val CAMERAX_PERMISSIONS = arrayOf(
-            Manifest.permission.CAMERA,
-            Manifest.permission.RECORD_AUDIO
-        )
-    }
 
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -157,7 +152,8 @@ class MainActivity : FragmentActivity() {
                                 onFeedbackTatilClick = { navController.navigate("feedbackTatil") },
                                 onFlashClick = { navigateWithCameraPermissions(navController, "flash") },
                                 onBluetoothClick = { navController.navigate("bluetooth") },
-                                onAudioClick = { navigateWithAudioPermissions(navController, "audio") }
+                                onAudioClick = { navigateWithAudioPermissions(navController, "audio") },
+                                onWifiClick = { navController.navigate("wifi") }
                             )
                         }
                         composable("biometria") { BiometriaScreen() }
@@ -166,6 +162,7 @@ class MainActivity : FragmentActivity() {
                         composable("flash") { FlashScreen() }
                         composable("bluetooth") { BluetoothScreen() }
                         composable("audio") { AudioScreen() }
+                        composable("wifi") { WifiScreen() }
                     }
                 }
             }
@@ -181,24 +178,47 @@ class MainActivity : FragmentActivity() {
             "flash" -> "Flash"
             "bluetooth" -> "Bluetooth"
             "audio" -> "Áudio"
+            "wifi" -> "Wi-Fi"
             else -> "App"
         }
     }
 
     private fun navigateWithCameraPermissions(navController: androidx.navigation.NavController, screen: String) {
-        if (hasRequiredPermissions()) {
+        if (hasCameraRequiredPermissions()) {
             navController.navigate(screen)
         } else {
             ActivityCompat.requestPermissions(
                 this,
-                CAMERAX_PERMISSIONS,
+                arrayOf(
+                    Manifest.permission.CAMERA,
+                    Manifest.permission.RECORD_AUDIO
+                ),
                 0
             )
         }
     }
 
+    private fun hasCameraRequiredPermissions(): Boolean {
+        val CAMERAX_PERMISSIONS = arrayOf(
+            Manifest.permission.CAMERA,
+            Manifest.permission.RECORD_AUDIO
+        )
+        return CAMERAX_PERMISSIONS.all {
+            ContextCompat.checkSelfPermission(applicationContext, it) == PackageManager.PERMISSION_GRANTED
+        }
+    }
+
+    private fun hasAudioRequiredPermissions(): Boolean {
+        val AUDIO_PERMISSIONS = arrayOf(
+            Manifest.permission.RECORD_AUDIO
+        )
+        return AUDIO_PERMISSIONS.all {
+            ContextCompat.checkSelfPermission(applicationContext, it) == PackageManager.PERMISSION_GRANTED
+        }
+    }
+
     private fun navigateWithAudioPermissions(navController: androidx.navigation.NavController, screen: String) {
-        if (hasRequiredPermissions()) {
+        if (hasAudioRequiredPermissions()) {
             navController.navigate(screen)
         } else {
             ActivityCompat.requestPermissions(
@@ -208,13 +228,6 @@ class MainActivity : FragmentActivity() {
             )
         }
     }
-
-    private fun hasRequiredPermissions(): Boolean {
-        return CAMERAX_PERMISSIONS.all {
-            ContextCompat.checkSelfPermission(applicationContext, it) == PackageManager.PERMISSION_GRANTED
-        }
-    }
-
 }
 
 @Composable
@@ -224,7 +237,8 @@ private fun MainScreen(
     onFeedbackTatilClick: () -> Unit,
     onFlashClick: () -> Unit,
     onBluetoothClick: () -> Unit,
-    onAudioClick: () -> Unit
+    onAudioClick: () -> Unit,
+    onWifiClick: () -> Unit
 ) {
     Surface(
         modifier = Modifier
@@ -248,6 +262,7 @@ private fun MainScreen(
             item { GridActionButton("Flash", Icons.Rounded.FlashOn, onFlashClick) }
             item { GridActionButton("Bluetooth", Icons.Rounded.Bluetooth, onBluetoothClick) }
             item { GridActionButton("Áudio", Icons.Rounded.Mic, onAudioClick) }
+            item { GridActionButton("Wi-Fi", Icons.Filled.Wifi, onWifiClick) }
         }
     }
 }
