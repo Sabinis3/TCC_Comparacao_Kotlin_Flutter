@@ -1,6 +1,7 @@
 package com.example.tcc_kotlin
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
 import android.content.Intent
@@ -61,6 +62,7 @@ import com.example.tcc_kotlin.screens.wifi.WifiScreen
 import com.example.tcc_kotlin.ui.theme.TCC_KotlinTheme
 import dagger.hilt.android.AndroidEntryPoint
 
+@SuppressLint("MissingPermission")
 @AndroidEntryPoint
 class MainActivity : FragmentActivity() {
 
