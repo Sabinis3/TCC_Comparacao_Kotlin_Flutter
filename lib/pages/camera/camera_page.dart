@@ -223,7 +223,9 @@ class _CameraPageState extends State<CameraPage> with WidgetsBindingObserver {
             future: _initializeControllerFuture,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
-                return SizedBox.expand(child: CameraPreview(_controller!));
+                return SizedBox.expand(
+                  child: CameraPreview(_controller!),
+                );
               } else if (snapshot.hasError) {
                 return Center(
                   child: Text(

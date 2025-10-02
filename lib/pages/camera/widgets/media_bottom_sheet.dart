@@ -2,10 +2,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 
 class MediaBottomSheet extends StatelessWidget {
-  const MediaBottomSheet({super.key, required List<File> mediaFiles})
-    : _mediaFiles = mediaFiles;
+  final List<File> mediaFiles;
 
-  final List<File> _mediaFiles;
+  const MediaBottomSheet({super.key, required this.mediaFiles});
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +29,7 @@ class MediaBottomSheet extends StatelessWidget {
                 ),
               ),
             ),
-            if (_mediaFiles.isEmpty)
+            if (mediaFiles.isEmpty)
               SizedBox(
                 width: double.infinity,
                 height: 160,
@@ -51,9 +50,9 @@ class MediaBottomSheet extends StatelessWidget {
               SizedBox(
                 height: 400,
                 child: ListView.builder(
-                  itemCount: _mediaFiles.length,
+                  itemCount: mediaFiles.length,
                   itemBuilder: (context, idx) {
-                    final file = _mediaFiles[idx];
+                    final file = mediaFiles[idx];
                     final isVideo = file.path.endsWith('.mp4');
                     return Material(
                       color: Colors.transparent,
