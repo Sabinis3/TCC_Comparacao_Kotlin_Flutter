@@ -24,6 +24,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Map
 import androidx.compose.material.icons.filled.Wifi
 import androidx.compose.material.icons.rounded.Bluetooth
 import androidx.compose.material.icons.rounded.CameraAlt
@@ -58,6 +59,7 @@ import com.example.tcc_kotlin.screens.bluetooth.ui.BluetoothScreen
 import com.example.tcc_kotlin.screens.camera.CameraScreen
 import com.example.tcc_kotlin.screens.feedbackTatil.FeedbackTatilScreen
 import com.example.tcc_kotlin.screens.flash.FlashScreen
+import com.example.tcc_kotlin.screens.gps.GpsScreen
 import com.example.tcc_kotlin.screens.wifi.WifiScreen
 import com.example.tcc_kotlin.ui.theme.TCC_KotlinTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -155,7 +157,8 @@ class MainActivity : FragmentActivity() {
                                 onFlashClick = { navigateWithCameraPermissions(navController, "flash") },
                                 onBluetoothClick = { navController.navigate("bluetooth") },
                                 onAudioClick = { navigateWithAudioPermissions(navController, "audio") },
-                                onWifiClick = { navController.navigate("wifi") }
+                                onWifiClick = { navController.navigate("wifi") },
+                                onGpsClick = { navController.navigate("gps") }
                             )
                         }
                         composable("biometria") { BiometriaScreen() }
@@ -165,6 +168,7 @@ class MainActivity : FragmentActivity() {
                         composable("bluetooth") { BluetoothScreen() }
                         composable("audio") { AudioScreen() }
                         composable("wifi") { WifiScreen() }
+                        composable("gps") { GpsScreen() }
                     }
                 }
             }
@@ -181,6 +185,7 @@ class MainActivity : FragmentActivity() {
             "bluetooth" -> "Bluetooth"
             "audio" -> "Áudio"
             "wifi" -> "Wi-Fi"
+            "gps" -> "GPS"
             else -> "App"
         }
     }
@@ -240,7 +245,8 @@ private fun MainScreen(
     onFlashClick: () -> Unit,
     onBluetoothClick: () -> Unit,
     onAudioClick: () -> Unit,
-    onWifiClick: () -> Unit
+    onWifiClick: () -> Unit,
+    onGpsClick: () -> Unit
 ) {
     Surface(
         modifier = Modifier
@@ -265,6 +271,7 @@ private fun MainScreen(
             item { GridActionButton("Bluetooth", Icons.Rounded.Bluetooth, onBluetoothClick) }
             item { GridActionButton("Áudio", Icons.Rounded.Mic, onAudioClick) }
             item { GridActionButton("Wi-Fi", Icons.Filled.Wifi, onWifiClick) }
+            item { GridActionButton("GPS", Icons.Filled.Map, onGpsClick) }
         }
     }
 }
