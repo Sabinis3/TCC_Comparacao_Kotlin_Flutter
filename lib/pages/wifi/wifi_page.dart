@@ -25,18 +25,18 @@ class _WifiPageState extends State<WifiPage> {
     final info = NetworkInfo();
     final ssid = await info.getWifiName();
     setState(() {
-      _connectedSSID = ssid;
+      _connectedSSID = ssid?.replaceAll('"', '');
       isLoadingCurrentWifi = false;
     });
   }
 
   Future<void> _scanWifi() async {
-    final can = await WiFiScan.instance.canStartScan();
-    if (can == CanStartScan.yes) {
+    final canScan = await WiFiScan.instance.canStartScan();
+    if (canScan == CanStartScan.yes) {
       await WiFiScan.instance.startScan();
-      final aps = await WiFiScan.instance.getScannedResults();
+      final results = await WiFiScan.instance.getScannedResults();
       setState(() {
-        _wifiList = aps;
+        _wifiList = results;
       });
     }
   }
@@ -63,48 +63,54 @@ class _WifiPageState extends State<WifiPage> {
                   padding: const EdgeInsets.all(16.0),
                   child: isLoadingCurrentWifi
                       ? const Center(child: CircularProgressIndicator())
-                      : Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              'Rede conectada atualmente',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            Text('SSID: ${_connectedSSID ?? "-"}'),
-                            Builder(
-                              builder: (context) {
-                                final connectedAp = _wifiList
-                                    .where((ap) => ap.ssid == _connectedSSID)
-                                    .toList();
-                                if (connectedAp.isNotEmpty) {
-                                  return Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text('BSSID: ${connectedAp.first.bssid}'),
-                                      Text(
-                                        'Sinal: ${connectedAp.first.level} dBm',
-                                      ),
-                                    ],
-                                  );
-                                } else {
-                                  return Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      const Text('BSSID: -'),
-                                      const Text('Sinal: - dBm'),
-                                    ],
-                                  );
-                                }
-                              },
-                            ),
-                          ],
-                        ),
+                      : (_connectedSSID == null
+                            ? const Text('Nenhuma rede conectada atualmente.')
+                            : Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    'Rede conectada atualmente',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Text('SSID: $_connectedSSID'),
+                                  Builder(
+                                    builder: (context) {
+                                      final connectedAp = _wifiList
+                                          .where(
+                                            (ap) => ap.ssid == _connectedSSID,
+                                          )
+                                          .toList();
+                                      if (connectedAp.isNotEmpty) {
+                                        return Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              'BSSID: ${connectedAp.first.bssid}',
+                                            ),
+                                            Text(
+                                              'Sinal: ${connectedAp.first.level} dBm',
+                                            ),
+                                          ],
+                                        );
+                                      } else {
+                                        return Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            const Text('BSSID: -'),
+                                            const Text('Sinal: - dBm'),
+                                          ],
+                                        );
+                                      }
+                                    },
+                                  ),
+                                ],
+                              )),
                 ),
               ),
             ),
@@ -116,8 +122,11 @@ class _WifiPageState extends State<WifiPage> {
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.refresh),
-                  onPressed: _scanWifi,
+                  icon: const Icon(Icons.refresh_rounded),
+                  onPressed: () {
+                    _getConnectedWifi();
+                    _scanWifi();
+                  },
                 ),
               ],
             ),
@@ -128,7 +137,6 @@ class _WifiPageState extends State<WifiPage> {
                   final ap = _wifiList[index];
                   final isConnected = ap.ssid == _connectedSSID;
                   return Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 16),
                     decoration: BoxDecoration(
                       color: isConnected
                           ? theme.colorScheme.primary.withAlpha(30)
@@ -159,6 +167,7 @@ class _WifiPageState extends State<WifiPage> {
                               style: TextStyle(
                                 color: theme.colorScheme.primary,
                                 fontWeight: FontWeight.bold,
+                                fontSize: 16.0,
                               ),
                             )
                           : null,
