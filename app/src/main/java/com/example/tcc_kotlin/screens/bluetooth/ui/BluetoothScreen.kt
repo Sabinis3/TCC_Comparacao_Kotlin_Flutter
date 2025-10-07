@@ -46,6 +46,7 @@ fun BluetoothScreen() {
             ) {
                 BluetoothDeviceList(
                     state.scannedDevices,
+                    state.pairedDevices,
                     onClick = {},
                     modifier = Modifier
                         .fillMaxWidth()
@@ -73,12 +74,30 @@ fun BluetoothScreen() {
 @Composable
 fun BluetoothDeviceList(
     scannedDevices: List<BluetoothDevice>,
+    pairedDevices: List<BluetoothDevice>,
     onClick: (BluetoothDevice) -> Unit,
     modifier: Modifier
 ){
     LazyColumn (
         modifier = modifier
     ){
+        item {
+            Text(
+                text = "Paired Devices",
+                fontWeight = FontWeight.Bold,
+                fontSize = 24.sp,
+                modifier = Modifier.padding(16.dp)
+            )
+        }
+        items(pairedDevices) { device ->
+            Text(
+                text = device.name ?: "(No name)",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { onClick(device) }
+                    .padding(16.dp)
+            )
+        }
         item {
             Text(
                 text = "Scanned Devices",
