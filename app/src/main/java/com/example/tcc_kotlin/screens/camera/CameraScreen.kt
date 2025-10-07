@@ -2,14 +2,11 @@ package com.example.tcc_kotlin.screens.camera
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.Matrix
 import android.util.Log
 import android.widget.Toast
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
-import androidx.camera.core.ImageProxy
 import androidx.camera.video.FileOutputOptions
 import androidx.camera.video.Recording
 import androidx.camera.video.VideoRecordEvent
@@ -29,6 +26,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Cameraswitch
 import androidx.compose.material.icons.filled.Photo
 import androidx.compose.material.icons.filled.PhotoCamera
+import androidx.compose.material.icons.filled.Square
 import androidx.compose.material.icons.filled.Videocam
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -67,7 +65,8 @@ fun CameraScreen() {
     val lifecycleOwner = LocalLifecycleOwner.current
     val context = LocalContext.current
     val viewModel = viewModel<CameraImagesViewModel>()
-    val bitmaps by viewModel.bitmaps.collectAsState()
+    val images by viewModel.images.collectAsState()
+    val videos by viewModel.videos.collectAsState()
     val controller = rememberCameraController(context, lifecycleOwner)
 
     var recording by rememberSaveable { mutableStateOf<Recording?>(null) }
@@ -87,57 +86,63 @@ fun CameraScreen() {
         disabledContentColor = Color.Gray
     )
 
-        BottomSheetScaffold(
-            scaffoldState = scaffoldState,
-            sheetPeekHeight = 0.dp,
-            sheetContent = {
-                PhotoBottomSheetContent(
-                    bitmaps = bitmaps,
-                    modifier = Modifier.fillMaxWidth()
-                )
-            }
-        ) { paddingValues ->
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues)
-            ) {
-                CameraPreview(controller)
-                CameraTopBar(
-                    onSwitchCamera = {
-                        controller.cameraSelector =
-                            if (controller.cameraSelector == CameraSelector.DEFAULT_BACK_CAMERA)
-                                CameraSelector.DEFAULT_FRONT_CAMERA
-                            else CameraSelector.DEFAULT_BACK_CAMERA
-                    },
-                    buttonColors = buttonColors
-                )
-                CameraActionBar(
-                    onOpenGallery = {
-                        scope.launch { scaffoldState.bottomSheetState.expand() }
-                    },
-                    onTakePhoto = {
-                        capturePhoto(
+    BottomSheetScaffold(
+        scaffoldState = scaffoldState,
+        sheetPeekHeight = 0.dp,
+        sheetContent = {
+            PhotoBottomSheetContent(
+                images = images,
+                videos = videos,
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
+    ) { paddingValues ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+        ) {
+            CameraPreview(controller)
+            CameraTopBar(
+                onSwitchCamera = {
+                    controller.cameraSelector =
+                        if (controller.cameraSelector == CameraSelector.DEFAULT_BACK_CAMERA)
+                            CameraSelector.DEFAULT_FRONT_CAMERA
+                        else CameraSelector.DEFAULT_BACK_CAMERA
+                },
+                buttonColors = buttonColors
+            )
+            CameraActionBar(
+                onOpenGallery = {
+                    scope.launch { scaffoldState.bottomSheetState.expand() }
+                },
+                onTakePhoto = {
+                    capturePhoto(
+                        controller = controller,
+                        context = context,
+                        onPhotoSaved = viewModel::onPhotoSaved
+                    )
+                },
+                onToggleVideo = {
+                    val (newRecording, nowRecording) =
+                        toggleRecording(
                             controller = controller,
+                            current = recording,
                             context = context,
-                            onPhotoTaken = viewModel::onTakePhoto
+                            onVideoSaved = viewModel::onVideoRecorded
                         )
-                    },
-                    onToggleVideo = {
-                        val (newRecording, nowRecording) =
-                            toggleRecording(controller, recording, context)
-                        recording = newRecording
-                        isRecording = nowRecording
-                    },
-                    isRecording = isRecording,
-                    buttonColors = buttonColors,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .navigationBarsPadding()
-                        .align(Alignment.BottomCenter)
-                        .padding(16.dp)
-                )
-            }
+                    recording = newRecording
+                    isRecording = nowRecording
+                },
+                isRecording = isRecording,
+                buttonColors = buttonColors,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .navigationBarsPadding()
+                    .align(Alignment.BottomCenter)
+                    .padding(16.dp)
+            )
+        }
     }
 }
 
@@ -211,11 +216,19 @@ private fun CameraActionBar(
             Icon(Icons.Default.PhotoCamera, contentDescription = "Take photo")
         }
         IconButton(onClick = onToggleVideo, colors = buttonColors) {
-            Icon(
-                imageVector = Icons.Default.Videocam,
-                contentDescription = if (isRecording) "Stop recording" else "Record video",
-                tint = if (isRecording) Color.Red else Color.White
-            )
+            if (isRecording) {
+                Icon(
+                    imageVector = Icons.Default.Square,
+                    contentDescription = "Stop recording",
+                    tint = Color.Red
+                )
+            } else {
+                Icon(
+                    imageVector = Icons.Default.Videocam,
+                    contentDescription = "Record video",
+                    tint = Color.White
+                )
+            }
         }
     }
 }
@@ -223,42 +236,25 @@ private fun CameraActionBar(
 private fun capturePhoto(
     controller: LifecycleCameraController,
     context: Context,
-    onPhotoTaken: (Bitmap) -> Unit
+    onPhotoSaved: (String) -> Unit
 ) {
+    val fileName = "IMG_${System.currentTimeMillis()}.jpg"
+    val outputFile = File(context.filesDir, fileName)
+    val outputOptions = ImageCapture.OutputFileOptions.Builder(outputFile).build()
+
     controller.takePicture(
+        outputOptions,
         ContextCompat.getMainExecutor(context),
-        object : ImageCapture.OnImageCapturedCallback() {
-            override fun onCaptureSuccess(image: ImageProxy) {
-                super.onCaptureSuccess(image)
-                try {
-                    val rotated = rotateBitmap(image)
-                    onPhotoTaken(rotated)
-                } catch (e: Exception) {
-                    Log.e("Camera", "Capture processing failed", e)
-                } finally {
-                    image.close()
-                }
+        object : ImageCapture.OnImageSavedCallback {
+            override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
+                Toast.makeText(context, "Photo saved", Toast.LENGTH_LONG).show()
+                onPhotoSaved(outputFile.name)
             }
 
             override fun onError(exception: ImageCaptureException) {
-                super.onError(exception)
-                Log.e("Camera", "Photo capture failed", exception)
+                Log.e("Camera", "Photo save failed", exception)
             }
         }
-    )
-}
-
-private fun rotateBitmap(image: ImageProxy): Bitmap {
-    val rotation = image.imageInfo.rotationDegrees.toFloat()
-    val matrix = Matrix().apply { postRotate(rotation) }
-    return Bitmap.createBitmap(
-        image.toBitmap(),
-        0,
-        0,
-        image.width,
-        image.height,
-        matrix,
-        true
     )
 }
 
@@ -266,7 +262,8 @@ private fun rotateBitmap(image: ImageProxy): Bitmap {
 private fun toggleRecording(
     controller: LifecycleCameraController,
     current: Recording?,
-    context: Context
+    context: Context,
+    onVideoSaved: (String) -> Unit
 ): Pair<Recording?, Boolean> {
     var active = current
     if (active != null) {
@@ -274,7 +271,10 @@ private fun toggleRecording(
         active.close()
         return null to false
     }
-    val outputFile = File(context.filesDir, "recording.mp4")
+
+    val fileName = "VID_${System.currentTimeMillis()}.mp4"
+    val outputFile = File(context.filesDir, fileName)
+
     active = controller.startRecording(
         FileOutputOptions.Builder(outputFile).build(),
         AudioConfig.create(true),
@@ -285,6 +285,7 @@ private fun toggleRecording(
                 Toast.makeText(context, "Video recording failed", Toast.LENGTH_LONG).show()
             } else {
                 Toast.makeText(context, "Video saved", Toast.LENGTH_LONG).show()
+                onVideoSaved(outputFile.name)
             }
         }
     }
