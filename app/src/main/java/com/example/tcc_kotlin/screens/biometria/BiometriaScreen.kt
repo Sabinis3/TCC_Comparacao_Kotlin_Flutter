@@ -18,11 +18,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Fingerprint
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -30,11 +27,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
+import com.example.tcc_kotlin.components.GridActionButton
 import java.util.concurrent.Executor
 
 @SuppressLint("SuspiciousIndentation")
@@ -85,7 +82,7 @@ fun BiometriaScreen() {
                         )
                     }
                 }
-                Button(
+                GridActionButton(
                     onClick = {
                         when (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG)) {
                             BiometricManager.BIOMETRIC_SUCCESS -> {
@@ -103,30 +100,10 @@ fun BiometriaScreen() {
                             }
                         }
                     },
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    shape = RoundedCornerShape(10.dp),
-                    colors = ButtonDefaults.buttonColors()
-                ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Center
-                    ) {
-                        Icon(
-                            imageVector = Icons.Filled.Fingerprint,
-                            contentDescription = null,
-                            modifier = Modifier.size(24.dp),
-                            tint = LocalContentColor.current
-                        )
-                        Text(
-                            text = "Autenticar com Biometria",
-                            fontSize = 16.sp,
-                            textAlign = TextAlign.Center,
-                            color = LocalContentColor.current
-                        )
-                    }
-                }
+                    text = "Autenticar com Biometria",
+                    icon = Icons.Filled.Fingerprint,
+                    aspectRatio = 8f
+                )
             }
         }
     }

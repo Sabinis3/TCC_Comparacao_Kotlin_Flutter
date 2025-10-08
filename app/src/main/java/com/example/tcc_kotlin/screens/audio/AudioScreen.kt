@@ -10,9 +10,9 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Mic
-import androidx.compose.material.icons.rounded.PlayArrow
-import androidx.compose.material.icons.rounded.Square
+import androidx.compose.material.icons.filled.Mic
+import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.Square
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -59,27 +59,47 @@ fun AudioScreen() {
                 horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterHorizontally)
             ) {
                 item {
-                        GridActionButton("Gravar áudio", Icons.Rounded.Mic) {
+                    GridActionButton(
+                        onClick = {
                             File(context.cacheDir, "audio_record.3gp").also {
                                 recorder.start(it)
                                 audioFile = it
                             }
-                        }
+                        },
+                        text = "Gravar áudio",
+                        icon = Icons.Filled.Mic,
+                        aspectRatio = (2.5f)
+                    )
                 }
                 item {
-                        GridActionButton("Parar gravação", Icons.Rounded.Square) {
+                    GridActionButton(
+                        onClick = {
                             recorder.stop()
-                        }
+                        },
+                        text = "Parar gravação",
+                        icon = Icons.Filled.Square,
+                        aspectRatio = (2.5f)
+                    )
                 }
                 item {
-                        GridActionButton("Tocar áudio", Icons.Rounded.PlayArrow) {
+                    GridActionButton(
+                        onClick = {
                             player.playFile(audioFile ?: return@GridActionButton)
-                        }
+                        },
+                        text = "Tocar áudio",
+                        icon = Icons.Filled.PlayArrow,
+                        aspectRatio = (2.5f)
+                    )
                 }
                 item {
-                        GridActionButton("Parar áudio", Icons.Rounded.Square) {
+                    GridActionButton(
+                        onClick = {
                             player.stop()
-                        }
+                        },
+                        text = "Parar áudio",
+                        icon = Icons.Filled.Square,
+                        aspectRatio = (2.5f)
+                    )
                 }
             }
         }

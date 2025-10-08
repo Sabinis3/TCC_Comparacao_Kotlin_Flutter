@@ -24,13 +24,14 @@ import androidx.compose.ui.unit.sp
 fun GridActionButton(
     text: String,
     icon: ImageVector,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    aspectRatio: Float
 ) {
     Button(
         onClick = onClick,
         modifier = Modifier
             .fillMaxWidth()
-            .aspectRatio(2.5f),
+            .aspectRatio(aspectRatio),
         shape = RoundedCornerShape(10.dp),
         contentPadding = PaddingValues(12.dp),
         colors = ButtonDefaults.buttonColors()
