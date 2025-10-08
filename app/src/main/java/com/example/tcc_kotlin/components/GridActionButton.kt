@@ -33,7 +33,7 @@ fun GridActionButton(
             .aspectRatio(2.5f),
         shape = RoundedCornerShape(10.dp),
         contentPadding = PaddingValues(12.dp),
-        colors = ButtonDefaults.buttonColors() // keeps your current theme color
+        colors = ButtonDefaults.buttonColors()
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
