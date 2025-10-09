@@ -12,6 +12,7 @@ class WifiPage extends StatefulWidget {
 class _WifiPageState extends State<WifiPage> {
   bool isLoadingCurrentWifi = true;
   String? _connectedSSID;
+  String? _wifiIP;
   List<WiFiAccessPoint> _wifiList = [];
 
   @override
@@ -24,8 +25,10 @@ class _WifiPageState extends State<WifiPage> {
   Future<void> _getConnectedWifi() async {
     final info = NetworkInfo();
     final ssid = await info.getWifiName();
+    final ip = await info.getWifiIP();
     setState(() {
       _connectedSSID = ssid?.replaceAll('"', '');
+      _wifiIP = ip;
       isLoadingCurrentWifi = false;
     });
   }
@@ -94,6 +97,12 @@ class _WifiPageState extends State<WifiPage> {
                                             ),
                                             Text(
                                               'Sinal: ${connectedAp.first.level} dBm',
+                                            ),
+                                            Text(
+                                              'Velocidade: ${connectedAp.first.bssid} Mbps',
+                                            ),
+                                            Text(
+                                              'IP: ${_wifiIP ?? '-'}',
                                             ),
                                           ],
                                         );

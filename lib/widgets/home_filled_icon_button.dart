@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class HomeFilledIconButton extends StatelessWidget {
   final Widget icon;
-  final VoidCallback onPressed;
+  final Function()? onPressed;
   final Widget label;
 
   const HomeFilledIconButton({
