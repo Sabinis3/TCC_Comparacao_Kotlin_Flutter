@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wifi_scan/wifi_scan.dart';
 import 'package:network_info_plus/network_info_plus.dart';
+import 'package:flutter/services.dart';
 
 class WifiPage extends StatefulWidget {
   const WifiPage({super.key});
@@ -14,6 +15,8 @@ class _WifiPageState extends State<WifiPage> {
   String? _connectedSSID;
   String? _wifiIP;
   List<WiFiAccessPoint> _wifiList = [];
+
+  static const platform = MethodChannel('com.example.app_flutter_tcc/wifi');
 
   @override
   void initState() {
@@ -41,6 +44,16 @@ class _WifiPageState extends State<WifiPage> {
       setState(() {
         _wifiList = results;
       });
+    }
+  }
+
+  Future<int?> _getLinkSpeed() async {
+    try {
+      final int? speed = await platform.invokeMethod('getLinkSpeed');
+      return speed;
+    } on PlatformException catch (e) {
+      debugPrint("Erro ao obter link speed: $e");
+      return null;
     }
   }
 
@@ -98,12 +111,26 @@ class _WifiPageState extends State<WifiPage> {
                                             Text(
                                               'Sinal: ${connectedAp.first.level} dBm',
                                             ),
-                                            Text(
-                                              'Velocidade: ${connectedAp.first.bssid} Mbps',
+                                            FutureBuilder<int?>(
+                                              future: _getLinkSpeed(),
+                                              builder: (context, snapshot) {
+                                                if (snapshot.connectionState ==
+                                                    ConnectionState.waiting) {
+                                                  return const Text(
+                                                    'Velocidade: ...',
+                                                  );
+                                                } else if (snapshot.hasError) {
+                                                  return const Text(
+                                                    'Velocidade: Erro',
+                                                  );
+                                                } else {
+                                                  return Text(
+                                                    'Velocidade: ${snapshot.data} Mbps',
+                                                  );
+                                                }
+                                              },
                                             ),
-                                            Text(
-                                              'IP: ${_wifiIP ?? '-'}',
-                                            ),
+                                            Text('IP: ${_wifiIP ?? '-'}'),
                                           ],
                                         );
                                       } else {
