@@ -264,14 +264,14 @@ private fun MainScreen(
             verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            item { GridActionButton("Biometria", Icons.Rounded.Fingerprint, onBiometriaClick, aspectRatio = (2.5f)) }
-            item { GridActionButton("Câmera", Icons.Rounded.CameraAlt, onCameraClick, aspectRatio = (2.5f)) }
-            item { GridActionButton("Vibração", Icons.Rounded.Vibration, onFeedbackTatilClick, aspectRatio = (2.5f)) }
-            item { GridActionButton("Flash", Icons.Rounded.FlashOn, onFlashClick, aspectRatio = (2.5f)) }
-            item { GridActionButton("Bluetooth", Icons.Rounded.Bluetooth, onBluetoothClick, aspectRatio = (2.5f)) }
-            item { GridActionButton("Áudio", Icons.Rounded.Mic, onAudioClick, aspectRatio = (2.5f)) }
-            item { GridActionButton("Wi-Fi", Icons.Filled.Wifi, onWifiClick, aspectRatio = (2.5f)) }
-            item { GridActionButton("GPS", Icons.Filled.Map, onGpsClick, aspectRatio = (2.5f)) }
+            item { GridActionButton("Biometria", Icons.Rounded.Fingerprint, onBiometriaClick, aspectRatio = (2.5f), enabled = true) }
+            item { GridActionButton("Câmera", Icons.Rounded.CameraAlt, onCameraClick, aspectRatio = (2.5f), enabled = true) }
+            item { GridActionButton("Vibração", Icons.Rounded.Vibration, onFeedbackTatilClick, aspectRatio = (2.5f), enabled = true) }
+            item { GridActionButton("Flash", Icons.Rounded.FlashOn, onFlashClick, aspectRatio = (2.5f), enabled = true) }
+            item { GridActionButton("Bluetooth", Icons.Rounded.Bluetooth, onBluetoothClick, aspectRatio = (2.5f), enabled = true) }
+            item { GridActionButton("Áudio", Icons.Rounded.Mic, onAudioClick, aspectRatio = (2.5f), enabled = true) }
+            item { GridActionButton("Wi-Fi", Icons.Filled.Wifi, onWifiClick, aspectRatio = (2.5f), enabled = true) }
+            item { GridActionButton("GPS", Icons.Filled.Map, onGpsClick, aspectRatio = (2.5f), enabled = true) }
         }
     }
 }

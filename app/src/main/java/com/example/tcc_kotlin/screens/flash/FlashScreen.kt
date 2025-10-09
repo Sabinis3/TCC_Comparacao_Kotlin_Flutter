@@ -49,7 +49,8 @@ fun FlashScreen() {
                     },
                     text = if (isFlashOn) "Desligar Flash" else "Ligar Flash",
                     icon = Icons.Filled.FlashOn,
-                    aspectRatio = 8f
+                    aspectRatio = 8f,
+                    enabled = true
                 )
             }
         }

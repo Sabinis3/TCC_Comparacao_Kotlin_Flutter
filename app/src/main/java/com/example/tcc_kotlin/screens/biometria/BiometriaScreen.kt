@@ -102,7 +102,8 @@ fun BiometriaScreen() {
                     },
                     text = "Autenticar com Biometria",
                     icon = Icons.Filled.Fingerprint,
-                    aspectRatio = 8f
+                    aspectRatio = 8f,
+                    enabled = true
                 )
             }
         }

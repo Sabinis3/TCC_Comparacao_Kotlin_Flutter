@@ -25,10 +25,12 @@ fun GridActionButton(
     text: String,
     icon: ImageVector,
     onClick: () -> Unit,
-    aspectRatio: Float
+    aspectRatio: Float,
+    enabled: Boolean = true
 ) {
     Button(
         onClick = onClick,
+        enabled = enabled,
         modifier = Modifier
             .fillMaxWidth()
             .aspectRatio(aspectRatio),

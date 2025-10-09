@@ -16,6 +16,10 @@ import androidx.compose.material.icons.filled.Square
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -27,18 +31,14 @@ import java.io.File
 
 @Composable
 fun AudioScreen() {
-
     val context = LocalContext.current
 
-    val recorder by lazy {
-        AndroidAudioRecorder(context)
-    }
+    val recorder = remember { AndroidAudioRecorder(context) }
+    val player = remember { AndroidAudioPlayer(context) }
 
-    val player by lazy {
-        AndroidAudioPlayer(context)
-    }
-
-    var audioFile: File? = null
+    var audioFile by remember { mutableStateOf<File?>(null) }
+    var isRecording by remember { mutableStateOf(false) }
+    var isPlaying by remember { mutableStateOf(false) }
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -61,44 +61,63 @@ fun AudioScreen() {
                 item {
                     GridActionButton(
                         onClick = {
-                            File(context.cacheDir, "audio_record.3gp").also {
-                                recorder.start(it)
-                                audioFile = it
+                            if (!isRecording && !isPlaying) {
+                                File(context.cacheDir, "audio_record.3gp").also {
+                                    recorder.start(it)
+                                    audioFile = it
+                                    isRecording = true
+                                }
                             }
                         },
                         text = "Gravar áudio",
                         icon = Icons.Filled.Mic,
-                        aspectRatio = (2.5f)
+                        aspectRatio = 2.5f,
+                        enabled = !isRecording && !isPlaying
                     )
                 }
                 item {
                     GridActionButton(
                         onClick = {
-                            recorder.stop()
+                            if (isRecording) {
+                                recorder.stop()
+                                isRecording = false
+                            }
                         },
                         text = "Parar gravação",
                         icon = Icons.Filled.Square,
-                        aspectRatio = (2.5f)
+                        aspectRatio = 2.5f,
+                        enabled = isRecording
                     )
                 }
                 item {
                     GridActionButton(
                         onClick = {
-                            player.playFile(audioFile ?: return@GridActionButton)
+                            val file = audioFile
+                            if (!isPlaying && !isRecording && file != null) {
+                                isPlaying = true
+                                player.playFile(file) {
+                                    isPlaying = false
+                                }
+                            }
                         },
                         text = "Tocar áudio",
                         icon = Icons.Filled.PlayArrow,
-                        aspectRatio = (2.5f)
+                        aspectRatio = 2.5f,
+                        enabled = !isRecording && !isPlaying && audioFile != null
                     )
                 }
                 item {
                     GridActionButton(
                         onClick = {
-                            player.stop()
+                            if (isPlaying) {
+                                player.stop()
+                                isPlaying = false
+                            }
                         },
                         text = "Parar áudio",
                         icon = Icons.Filled.Square,
-                        aspectRatio = (2.5f)
+                        aspectRatio = 2.5f,
+                        enabled = isPlaying
                     )
                 }
             }

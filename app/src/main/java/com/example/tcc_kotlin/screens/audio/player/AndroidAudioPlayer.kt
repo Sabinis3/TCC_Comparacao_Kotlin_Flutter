@@ -7,20 +7,30 @@ import java.io.File
 
 class AndroidAudioPlayer(
     private val context: Context
-): AudioPlayer {
+) : AudioPlayer {
 
     private var player: MediaPlayer? = null
 
-    override fun playFile(file: File) {
+    override fun playFile(file: File, onCompletion: () -> Unit) {
+        stop()
         MediaPlayer.create(context, file.toUri()).apply {
+            setOnCompletionListener {
+                onCompletion()
+                stop()
+            }
             player = this
             start()
         }
     }
 
     override fun stop() {
-        player?.stop()
-        player?.reset()
+        player?.run {
+            try {
+                stop()
+            } catch (_: IllegalStateException) { }
+            reset()
+            release()
+        }
         player = null
     }
 }

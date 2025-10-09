@@ -101,7 +101,8 @@ fun FeedbackTatilScreen() {
                             onClick = { vibrate(80) },
                             text = "Pulso único",
                             icon = Icons.Filled.Vibration,
-                            aspectRatio = 8f
+                            aspectRatio = 8f,
+                            enabled = true
                         )
                     }
                     Row(
@@ -111,7 +112,8 @@ fun FeedbackTatilScreen() {
                             onClick = { vibrateWaveform() },
                             text = "Forma de onda",
                             icon = Icons.Filled.Vibration,
-                            aspectRatio = 8f
+                            aspectRatio = 8f,
+                            enabled = true
                         )
                     }
                     Row(
@@ -121,7 +123,8 @@ fun FeedbackTatilScreen() {
                             onClick = { vibrateWaveformWithAmplitude() },
                             text = "Forma de onda com amplitude",
                             icon = Icons.Filled.Vibration,
-                            aspectRatio = 8f
+                            aspectRatio = 8f,
+                            enabled = true
                         )
                     }
                     Text(
@@ -139,7 +142,8 @@ fun FeedbackTatilScreen() {
                             },
                             text = "Vibração suave com Haptic",
                             icon = Icons.Filled.Vibration,
-                            aspectRatio = 8f
+                            aspectRatio = 8f,
+                            enabled = true
                         )
                     }
                     Row(
@@ -151,7 +155,8 @@ fun FeedbackTatilScreen() {
                             },
                             text = "Vibração longa com Haptic",
                             icon = Icons.Filled.Vibration,
-                            aspectRatio = 8f
+                            aspectRatio = 8f,
+                            enabled = true
                         )
                     }
                     Row(
@@ -163,7 +168,8 @@ fun FeedbackTatilScreen() {
                             },
                             text = "Vibração para teclado virtual com Haptic",
                             icon = Icons.Filled.Vibration,
-                            aspectRatio = 8f
+                            aspectRatio = 8f,
+                            enabled = true
                         )
                     }
                 }
