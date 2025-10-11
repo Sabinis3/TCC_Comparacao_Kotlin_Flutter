@@ -138,7 +138,7 @@ fun FeedbackTatilScreen() {
                     ) {
                         GridActionButton(
                             onClick = {
-                                composeHaptic.performHapticFeedback(HapticFeedbackType.KeyboardTap)
+                                composeHaptic.performHapticFeedback(HapticFeedbackType.GestureEnd)
                             },
                             text = "Vibração suave com Haptic",
                             icon = Icons.Filled.Vibration,
@@ -151,7 +151,7 @@ fun FeedbackTatilScreen() {
                     ) {
                         GridActionButton(
                             onClick = {
-                                composeHaptic.performHapticFeedback(HapticFeedbackType.KeyboardTap)
+                                composeHaptic.performHapticFeedback(HapticFeedbackType.LongPress)
                             },
                             text = "Vibração longa com Haptic",
                             icon = Icons.Filled.Vibration,
