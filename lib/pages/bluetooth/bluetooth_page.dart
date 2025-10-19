@@ -9,7 +9,9 @@ class BluetoothPage extends StatefulWidget {
 }
 
 class _BluetoothPageState extends State<BluetoothPage> {
-  static const platform = MethodChannel('com.example.app_flutter_tcc/bluetooth');
+  static const platform = MethodChannel(
+    'com.example.app_flutter_tcc/bluetooth',
+  );
 
   List<Map<String, String>> bondedDevices = [];
   List<Map<String, String>> discoveredDevices = [];
@@ -24,6 +26,7 @@ class _BluetoothPageState extends State<BluetoothPage> {
   Future<void> _getBondedDevices() async {
     try {
       final List devices = await platform.invokeMethod('getBondedDevices');
+      if (!mounted) return;
       setState(() {
         bondedDevices = devices
             .cast<Map>()
@@ -42,6 +45,7 @@ class _BluetoothPageState extends State<BluetoothPage> {
     });
     try {
       final List devices = await platform.invokeMethod('startDiscovery');
+      if (!mounted) return;
       setState(() {
         discoveredDevices = devices
             .cast<Map>()
@@ -50,11 +54,12 @@ class _BluetoothPageState extends State<BluetoothPage> {
       });
     } on PlatformException catch (e) {
       debugPrint("Erro ao buscar dispositivos: $e");
-    } finally {
-      setState(() {
-        isDiscovering = false;
-      });
     }
+    
+    if (!mounted) return;
+    setState(() {
+      isDiscovering = false;
+    });
   }
 
   @override
